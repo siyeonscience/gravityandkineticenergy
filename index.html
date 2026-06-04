@@ -1,0 +1,1928 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>중력이 한 일과 운동 에너지의 관계 실험실</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts (Noto Sans KR) -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  
+  <!-- MathJax Configuration for perfect LaTeX rendering in Interactive Screen -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script" async></script>
+  
+  <!-- Html2Canvas library for high-resolution report image exporting -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <style>
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      user-select: none;
+    }
+    /* LED font feel for photogate sensor screen */
+    @font-face {
+      font-family: 'Digital';
+      src: url('https://fonts.cdnfonts.com/s/14144/digital-7.woff') format('woff');
+    }
+    .digital-font {
+      font-family: 'Digital', 'Courier New', Courier, monospace;
+    }
+    /* Custom Scrollbar for better UI */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col overflow-x-hidden">
+
+  <!-- Header -->
+  <header class="bg-gradient-to-r from-blue-700 to-indigo-800 text-white shadow-md py-3 px-5 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto flex flex-row justify-between items-center gap-2">
+      <div class="flex items-center gap-3">
+        <div class="p-1.5 bg-white/10 rounded-lg">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-base sm:text-lg font-bold tracking-tight">Ⅲ-2. 일과 에너지</h1>
+          <p class="text-[10px] sm:text-xs text-blue-100 font-medium">❸ 중력이 일을 하면 에너지가 생겨 (가상-실제 연계 실험)</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="openReportModal()" class="flex items-center gap-1.5 bg-yellow-400 hover:bg-yellow-500 text-slate-950 font-black text-xs px-3.5 py-1.5 rounded-xl shadow transition-all transform hover:scale-105">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+          </svg>
+          실험 보고서 이미지 저장
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Layout - Side by Side on md(768px) and above -->
+  <main class="flex-grow max-w-7xl w-full mx-auto p-3 sm:p-4 grid grid-cols-1 md:grid-cols-12 gap-4">
+    
+    <!-- Left Panel: Virtual Physics Simulator (Takes 5 columns from md breakpoint) -->
+    <section class="md:col-span-5 flex flex-col gap-4">
+      
+      <!-- Laboratory Apparatus Card -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col h-full">
+        <div class="bg-slate-100 px-4 py-2 border-b border-slate-200 flex justify-between items-center">
+          <h2 class="font-bold text-slate-700 text-sm flex items-center gap-1.5">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-indigo-600" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd" />
+            </svg>
+            가상 실험 장치 (낙하)
+          </h2>
+          <span class="text-[10px] bg-indigo-50 text-indigo-700 font-bold px-1.5 py-0.5 rounded">실시간 피드백</span>
+        </div>
+        
+        <!-- Interactive Canvas / SVG Section - Height optimized for Landscape Tablets -->
+        <div class="relative bg-gradient-to-b from-slate-900 to-slate-950 p-2 flex justify-center items-center h-[260px] xs:h-[280px] sm:h-[300px] md:h-[280px] lg:h-[320px] overflow-hidden select-none">
+          
+          <!-- Physics Lab Drawing Container -->
+          <svg id="lab-svg" class="w-full h-full" viewBox="0 0 300 320">
+            <!-- Stand Base -->
+            <rect x="30" y="295" width="240" height="15" rx="4" fill="#334155" />
+            <!-- Stand Vertical Bar -->
+            <rect x="60" y="20" width="10" height="275" fill="#64748b" />
+            <!-- Stand Clamps -->
+            <rect x="65" y="40" width="30" height="8" fill="#475569" />
+            <rect x="65" y="235" width="30" height="8" fill="#475569" />
+            
+            <!-- Measuring Ruler Scale -->
+            <line x1="85" y1="50" x2="85" y2="250" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="2,5" />
+            <!-- Ruler Markings for 10, 20, 30cm -->
+            <!-- 30cm marking (highest) -->
+            <line x1="81" y1="90" x2="89" y2="90" stroke="#ef4444" stroke-width="2" />
+            <text x="94" y="93" fill="#ef4444" font-size="10" font-weight="bold">30cm</text>
+            
+            <!-- 20cm marking -->
+            <line x1="81" y1="140" x2="89" y2="140" stroke="#f59e0b" stroke-width="2" />
+            <text x="94" y="143" fill="#f59e0b" font-size="10" font-weight="bold">20cm</text>
+            
+            <!-- 10cm marking -->
+            <line x1="81" y1="190" x2="89" y2="190" stroke="#10b981" stroke-width="2" />
+            <text x="94" y="193" fill="#10b981" font-size="10" font-weight="bold">10cm</text>
+            
+            <!-- Transparent Plastic Tube -->
+            <rect x="135" y="40" width="30" height="210" rx="3" fill="rgba(255, 255, 255, 0.12)" stroke="rgba(255, 255, 255, 0.3)" stroke-width="1.5" />
+            <!-- Inner Tube Guide lines -->
+            <line x1="137" y1="40" x2="137" y2="250" stroke="rgba(255,255,255,0.05)" />
+            <line x1="163" y1="40" x2="163" y2="250" stroke="rgba(255,255,255,0.05)" />
+
+            <!-- Paper Cup at the bottom -->
+            <path d="M137,270 L163,270 L158,295 L142,295 Z" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1" />
+            <!-- Ground Line inside paper cup -->
+            <line x1="120" y1="295" x2="180" y2="295" stroke="#475569" stroke-width="2" />
+            
+            <!-- Photogate Speed Sensor Unit (광센서) -->
+            <g id="photogate">
+              <rect x="120" y="225" width="60" height="20" rx="4" fill="#1e293b" stroke="#475569" stroke-width="1.5" />
+              <!-- Two Photodiode Light Beams -->
+              <line x1="130" y1="235" x2="170" y2="235" stroke="#ef4444" stroke-width="1" stroke-dasharray="1,2" opacity="0.8" />
+              <line x1="130" y1="241" x2="170" y2="241" stroke="#ef4444" stroke-width="1" stroke-dasharray="1,2" opacity="0.8" />
+              <!-- Status LED -->
+              <circle id="sensor-led" cx="127" cy="235" r="2.5" fill="#ef4444" />
+            </g>
+
+            <!-- Draggable/Falling Weight (추) -->
+            <g id="falling-weight" transform="translate(150, 90)">
+              <!-- Hanging String -->
+              <line id="string-line" x1="0" y1="-50" x2="0" y2="-8" stroke="#94a3b8" stroke-width="1" />
+              <!-- Weight hook -->
+              <path d="M-4,-8 C-4,-12 4,-12 4,-8" fill="none" stroke="#fbbf24" stroke-width="2" />
+              <!-- Main Metal Cylinder -->
+              <rect id="weight-body" x="-10" y="-8" width="20" height="20" rx="2" fill="#d97706" stroke="#b45309" stroke-width="1" />
+              <!-- Mass Label text inside -->
+              <text id="weight-label" x="0" y="5" fill="#ffffff" font-size="7" font-weight="bold" text-anchor="middle">100g</text>
+            </g>
+          </svg>
+          
+          <!-- Height Guide Lines & Floating Badges -->
+          <div id="status-bubble" class="absolute bottom-2 right-2 bg-black/75 text-[10px] sm:text-xs px-2.5 py-1 rounded-lg border border-white/10 flex flex-col gap-0.5 pointer-events-none">
+            <span class="flex justify-between gap-3 text-slate-400">상태: <span id="sim-state-text" class="text-indigo-400 font-bold">대기 중</span></span>
+            <span class="flex justify-between gap-3 text-slate-400">높이: <span id="sim-height-text" class="text-white font-bold">30.0 cm</span></span>
+          </div>
+
+          <!-- Collision Effect (Splash) -->
+          <div id="collision-flash" class="absolute inset-0 bg-white opacity-0 pointer-events-none transition-opacity duration-75"></div>
+        </div>
+
+        <!-- Real-time Speed Display Panel (LED Readout) -->
+        <div class="bg-slate-900 px-4 py-2 flex items-center justify-between border-t border-slate-800">
+          <div class="flex flex-col">
+            <span class="text-[10px] font-bold text-slate-400 tracking-wider">속력 측정기 (Photogate)</span>
+            <span class="text-[8px] text-slate-500">감지기 통과 속력</span>
+          </div>
+          <div class="bg-black border border-slate-800 rounded-lg px-3 py-1 flex items-baseline gap-1.5 shadow-inner min-w-[100px] justify-end">
+            <span id="speed-display" class="text-2xl font-bold text-emerald-400 digital-font tracking-widest">0.00</span>
+            <span class="text-[10px] text-emerald-500 font-bold">m/s</span>
+          </div>
+        </div>
+
+        <!-- Physics Simulator Controls (Optimized spacing for tablet viewports) -->
+        <div class="p-4 flex flex-col gap-3 bg-slate-50/50 flex-grow">
+          
+          <!-- Selection 1: Mass Select (질량) -->
+          <div>
+            <label class="block text-[11px] font-bold text-slate-500 mb-1">1. 추의 질량 선택 (Mass)</label>
+            <div class="grid grid-cols-2 gap-2">
+              <button id="btn-mass-100" onclick="setMass(100)" class="py-1.5 px-3 rounded-lg border-2 font-bold text-xs transition-all flex items-center justify-center gap-1.5 border-indigo-600 bg-indigo-50 text-indigo-700 shadow-sm">
+                <span class="h-2.5 w-2.5 rounded-full border-[3px] border-indigo-600"></span>
+                100 g (0.1 kg)
+              </button>
+              <button id="btn-mass-200" onclick="setMass(200)" class="py-1.5 px-3 rounded-lg border-2 border-slate-200 text-slate-600 font-bold text-xs hover:bg-slate-50 transition-all flex items-center justify-center gap-1.5">
+                <span class="h-2.5 w-2.5 rounded-full border border-slate-300"></span>
+                200 g (0.2 kg)
+              </button>
+            </div>
+          </div>
+
+          <!-- Selection 2: Height Select -->
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <label class="block text-[11px] font-bold text-slate-500">2. 추의 낙하 높이 선택 (Height)</label>
+              <span id="slider-val" class="text-xs font-black text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full">30 cm</span>
+            </div>
+            
+            <div class="grid grid-cols-3 gap-2">
+              <button onclick="setHeight(10)" id="preset-10" class="py-2.5 px-2 rounded-xl border-2 border-slate-200 text-slate-600 font-medium text-xs hover:bg-slate-50 transition-all flex items-center justify-center">10 cm</button>
+              <button onclick="setHeight(20)" id="preset-20" class="py-2.5 px-2 rounded-xl border-2 border-slate-200 text-slate-600 font-medium text-xs hover:bg-slate-50 transition-all flex items-center justify-center">20 cm</button>
+              <button onclick="setHeight(30)" id="preset-30" class="py-2.5 px-2 rounded-xl border-2 border-indigo-600 bg-indigo-50 text-indigo-700 font-bold text-xs transition-all flex items-center justify-center shadow-sm">30 cm (추천)</button>
+            </div>
+          </div>
+
+          <!-- Mode Toggle: Real Air resistance vs Vacuum -->
+          <div class="bg-white p-2 rounded-lg border border-slate-200 flex items-center justify-between">
+            <div class="leading-tight">
+              <span class="text-[10px] font-bold text-slate-700 block">공기 저항 시뮬레이션</span>
+              <span id="condition-desc" class="text-[9px] text-slate-500">공기 마찰과 실제 오차가 가상 반영됩니다.</span>
+            </div>
+            <button id="btn-toggle-condition" onclick="toggleCondition()" class="relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none bg-indigo-600">
+              <span class="sr-only">Toggle condition</span>
+              <span id="toggle-circle" class="pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out translate-x-4"></span>
+            </button>
+          </div>
+
+          <!-- Simulation Action Buttons -->
+          <div class="grid grid-cols-2 gap-2 pt-1">
+            <button id="btn-reset" onclick="resetSimulation()" class="py-2 px-3 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 font-bold text-xs text-slate-700 transition-all flex items-center justify-center gap-1.5">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 8H18" />
+              </svg>
+              다시 준비
+            </button>
+            <button id="btn-drop" onclick="startDrop()" class="py-2.5 px-3 rounded-xl bg-gradient-to-r from-indigo-600 to-blue-700 hover:from-indigo-700 hover:to-blue-800 text-white font-black text-xs shadow-md transition-all flex items-center justify-center gap-1.5">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-yellow-300 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 13l-7 7-7-7m14-6l-7 7-7-7" />
+              </svg>
+              추 낙하 & 자동기록
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Right Panel: Data Table, Calculations & Graph (Takes 7 columns from md breakpoint) -->
+    <section class="md:col-span-7 flex flex-col gap-4">
+
+      <!-- Tabs Header Navigation -->
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden flex flex-col h-full">
+        <div class="flex border-b border-slate-200 bg-slate-50">
+          <button id="tab-data" onclick="switchTab('data')" class="flex-1 py-2.5 px-2 font-bold text-xs sm:text-sm border-b-2 text-indigo-600 border-indigo-600 bg-white transition-all">
+            📊 실험 데이터 표 (자동 기록됨)
+          </button>
+          <button id="tab-analysis" onclick="switchTab('analysis')" class="flex-1 py-2.5 px-2 font-bold text-xs sm:text-sm border-b-2 text-slate-500 border-transparent hover:text-slate-700 hover:bg-slate-100 transition-all">
+            ⚖️ 에너지 전환 직접 계산
+          </button>
+          <button id="tab-questions" onclick="switchTab('questions')" class="flex-1 py-2.5 px-2 font-bold text-xs sm:text-sm border-b-2 text-slate-500 border-transparent hover:text-slate-700 hover:bg-slate-100 transition-all">
+            📝 정리 & 실전실험 대비
+          </button>
+        </div>
+
+        <!-- Tab 1: Experimental Data Table Content -->
+        <div id="content-data" class="p-4 flex flex-col gap-3 flex-grow">
+          <div class="flex flex-row justify-between items-center">
+            <div>
+              <h3 class="text-sm font-bold text-slate-800">실시간 속력 측정 데이터 기록</h3>
+              <p class="text-[10px] text-slate-500">추가 낙하를 완료하면 자동으로 속력이 아래 표에 기입됩니다.</p>
+            </div>
+            <span class="text-[10px] bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-1 rounded-full font-bold flex items-center gap-1">
+              <span class="h-1.5 w-1.5 bg-emerald-500 rounded-full animate-ping"></span>
+              자동 기록 엔진 상시 대기
+            </span>
+          </div>
+
+          <!-- Responsive Table Container -->
+          <div class="overflow-x-auto rounded-xl border border-slate-200">
+            <table class="w-full text-xs text-center border-collapse">
+              <thead>
+                <tr class="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold">
+                  <th class="py-2 px-1.5 border-r border-slate-200">추의 낙하 높이</th>
+                  <th class="py-2 px-1.5 border-r border-slate-200 text-emerald-600 bg-emerald-50/40">10 cm</th>
+                  <th class="py-2 px-1.5 border-r border-slate-200 text-amber-600 bg-amber-50/40">20 cm</th>
+                  <th class="py-2 px-1.5 text-rose-600 bg-rose-50/40">30 cm</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 text-slate-700 font-medium">
+                <tr>
+                  <td class="py-1.5 px-1 bg-slate-50/50 border-r border-slate-200">1회 속력 (m/s)</td>
+                  <td id="cell-10-1" class="py-1.5 px-1 border-r border-slate-200 text-slate-400">-</td>
+                  <td id="cell-20-1" class="py-1.5 px-1 border-r border-slate-200 text-slate-400">-</td>
+                  <td id="cell-30-1" class="py-1.5 px-1 text-slate-400">-</td>
+                </tr>
+                <tr>
+                  <td class="py-1.5 px-1 bg-slate-50/50 border-r border-slate-200">2회 속력 (m/s)</td>
+                  <td id="cell-10-2" class="py-1.5 px-1 border-r border-slate-200 text-slate-400">-</td>
+                  <td id="cell-20-2" class="py-1.5 px-1 border-r border-slate-200 text-slate-400">-</td>
+                  <td id="cell-30-2" class="py-1.5 px-1 text-slate-400">-</td>
+                </tr>
+                <tr>
+                  <td class="py-1.5 px-1 bg-slate-50/50 border-r border-slate-200">3회 속력 (m/s)</td>
+                  <td id="cell-10-3" class="py-1.5 px-1 border-r border-slate-200 text-slate-400">-</td>
+                  <td id="cell-20-3" class="py-1.5 px-1 border-r border-slate-200 text-slate-400">-</td>
+                  <td id="cell-30-3" class="py-1.5 px-1 text-slate-400">-</td>
+                </tr>
+                <tr>
+                  <td class="py-1.5 px-1 bg-slate-50/50 border-r border-slate-200">4회 속력 (m/s)</td>
+                  <td id="cell-10-4" class="py-1.5 px-1 border-r border-slate-200 text-slate-400">-</td>
+                  <td id="cell-20-4" class="py-1.5 px-1 border-r border-slate-200 text-slate-400">-</td>
+                  <td id="cell-30-4" class="py-1.5 px-1 text-slate-400">-</td>
+                </tr>
+                <tr>
+                  <td class="py-1.5 px-1 bg-slate-50/50 border-r border-slate-200">5회 속력 (m/s)</td>
+                  <td id="cell-10-5" class="py-1.5 px-1 border-r border-slate-200 text-slate-400">-</td>
+                  <td id="cell-20-5" class="py-1.5 px-1 border-r border-slate-200 text-slate-400">-</td>
+                  <td id="cell-30-5" class="py-1.5 px-1 text-slate-400">-</td>
+                </tr>
+                <tr class="bg-indigo-50/30 font-bold text-indigo-950">
+                  <td class="py-2 px-1.5 border-r border-slate-200 bg-slate-100">평균 속력 (m/s)</td>
+                  <td id="cell-10-avg" class="py-2 px-1.5 border-r border-slate-200">0.00</td>
+                  <td id="cell-20-avg" class="py-2 px-1.5 border-r border-slate-200">0.00</td>
+                  <td id="cell-30-avg" class="py-2 px-1.5">0.00</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="flex justify-between items-center">
+            <span class="text-[9px] text-slate-500 font-medium">* 표준 높이(10, 20, 30cm) 조건에서만 자동으로 기록이 누적됩니다.</span>
+            <button onclick="clearDataTable()" class="text-[10px] font-bold text-rose-600 hover:text-rose-800 transition-colors">데이터 전체 리셋</button>
+          </div>
+
+          <!-- Auto-record Guidelines -->
+          <div class="p-3 rounded-xl bg-indigo-50/40 border border-indigo-100 mt-auto text-xs">
+            <h4 class="text-[10px] font-bold text-indigo-950 flex items-center gap-1 mb-1">
+              🚀 스마트 자동 기록 기능 안내
+            </h4>
+            <p class="text-[10px] text-indigo-900 leading-normal">
+              이전 버전과 달리, 이제 <strong class="text-indigo-700">[추 낙하 & 자동기록]</strong> 버튼만 누르면 센서 감지 즉시 현재 높이 테이블에 기록이 <strong>자동으로 누적</strong>됩니다. 높이별로 5회씩 낙하시켜 평균 속력을 즉시 산출해 보세요!
+            </p>
+          </div>
+        </div>
+
+        <!-- Tab 2: Energy Analysis -->
+        <div id="content-analysis" class="p-4 hidden flex flex-col gap-4 flex-grow overflow-y-auto max-h-[480px]">
+          <div>
+            <h3 class="text-sm font-black text-slate-800">에너지 직접 손으로 계산하고 검증하기</h3>
+            <p class="text-[10px] text-slate-500">직접 수식을 활용해 빈칸을 계산한 후 입력해 보세요. 올바르게 계산했는지 즉시 평가됩니다.</p>
+          </div>
+
+          <!-- Dynamic variables display banner -->
+          <div class="bg-indigo-900 text-white p-3 rounded-xl shadow-sm leading-tight">
+            <span class="text-[9px] font-bold text-indigo-300 block mb-1">현재 계산용 물리 데이터 리드아웃</span>
+            <div class="grid grid-cols-3 gap-2 text-center text-xs mt-1">
+              <div class="bg-white/10 p-1.5 rounded">
+                <span class="block text-[8px] text-indigo-200">질량 ($m$)</span>
+                <span id="calc-state-mass" class="font-extrabold text-yellow-300">0.1 kg</span>
+              </div>
+              <div class="bg-white/10 p-1.5 rounded">
+                <span class="block text-[8px] text-indigo-200">낙하 높이 ($h$)</span>
+                <span id="calc-state-height" class="font-extrabold text-yellow-300">0.3 m</span>
+              </div>
+              <div class="bg-white/10 p-1.5 rounded">
+                <span class="block text-[8px] text-indigo-200">현재 높이 평균속력 ($v$)</span>
+                <span id="calc-state-v" class="font-extrabold text-emerald-300">0.00 m/s</span>
+              </div>
+            </div>
+            <!-- Alert if speed is 0 -->
+            <p id="calc-speed-alert" class="text-[9px] text-rose-300 text-center font-bold mt-2 hidden">
+              ⚠️ 주의: 현재 선택된 높이의 실험 평균 속력이 존재하지 않습니다. 먼저 실험을 최소 1회 진행해 주세요.
+            </p>
+          </div>
+
+          <!-- Interactive Formulas Guide -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            
+            <!-- Work Calculation Field -->
+            <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl flex flex-col gap-2">
+              <div>
+                <span class="text-[10px] font-black text-indigo-700 block">① 중력이 추에 한 일의 양 ($W$)</span>
+                <span class="text-[9px] text-slate-500">$W = 9.8 \times m(\text{kg} ) \times h(\text{m} )$</span>
+              </div>
+              <div class="flex gap-1.5 items-center mt-1">
+                <input type="number" id="input-work" step="0.001" placeholder="직접 계산한 J 입력" class="flex-grow text-xs p-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
+                <button onclick="verifyUserCalculation('work')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs py-2 px-3 rounded-lg shadow-sm shrink-0">확인</button>
+              </div>
+              <p id="feedback-work" class="text-[9px] font-bold leading-tight"></p>
+            </div>
+
+            <!-- Kinetic Energy Calculation Field -->
+            <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl flex flex-col gap-2">
+              <div>
+                <span class="text-[10px] font-black text-amber-700 block">② 낙하 직후 추의 운동 에너지 ($E_k$)</span>
+                <span class="text-[9px] text-slate-500">$E_k = \frac{1}{2} \times m(\text{kg} ) \times v(\text{m/s} )^2$</span>
+              </div>
+              <div class="flex gap-1.5 items-center mt-1">
+                <input type="number" id="input-ke" step="0.001" placeholder="직접 계산한 J 입력" class="flex-grow text-xs p-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white">
+                <button onclick="verifyUserCalculation('ke')" class="bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs py-2 px-3 rounded-lg shadow-sm shrink-0">확인</button>
+              </div>
+              <p id="feedback-ke" class="text-[9px] font-bold leading-tight"></p>
+            </div>
+
+          </div>
+
+          <!-- Dynamic Visual Graphs Panel - Locked until calculations verified -->
+          <div class="p-3 bg-slate-100 rounded-xl border border-slate-200 mt-2">
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-[10px] font-black text-slate-700 block">📊 에너지 보존 실시간 그래프 (현재 기준: <span id="current-mass-h-lbl" class="text-indigo-600 font-extrabold">100g, 30cm</span>)</span>
+            </div>
+            
+            <!-- Graph state message -->
+            <div id="graph-lock-msg" class="text-center py-4 text-xs text-slate-500 font-semibold border-2 border-dashed border-slate-300 rounded-lg bg-white/50">
+              🔒 위의 일($W$)과 운동 에너지($E_k$) 값을 직접 올바르게 구하여 [확인] 버튼을 통과하면 그래프가 활성화됩니다!
+            </div>
+
+            <div id="graph-active-container" class="space-y-3 hidden">
+              <!-- Gravity's Work Bar -->
+              <div>
+                <div class="flex justify-between text-[10px] font-bold mb-0.5">
+                  <span class="text-indigo-700">중력이 추에 한 일 (이론치 $W$)</span>
+                  <span id="chart-work-val" class="text-slate-800 font-black">0.000 J</span>
+                </div>
+                <div class="w-full bg-slate-200 h-4 rounded-md overflow-hidden flex">
+                  <div id="chart-work-bar" class="bg-indigo-600 transition-all duration-500 h-full w-0" style="width: 0%"></div>
+                </div>
+              </div>
+
+              <!-- Kinetic Energy Bar -->
+              <div>
+                <div class="flex justify-between text-[10px] font-bold mb-0.5">
+                  <span class="text-amber-700">추가 얻은 운동 에너지 (실험치 $E_k$)</span>
+                  <span id="chart-ke-val" class="text-slate-800 font-black">0.000 J</span>
+                </div>
+                <div class="w-full bg-slate-200 h-4 rounded-md overflow-hidden flex">
+                  <div id="chart-ke-bar" class="bg-amber-500 transition-all duration-500 h-full w-0" style="width: 0%"></div>
+                </div>
+              </div>
+
+              <!-- Graph Status Analysis -->
+              <div id="equality-statement" class="p-2.5 bg-emerald-50 text-emerald-800 rounded-lg border border-emerald-100 text-[10px] leading-relaxed font-medium">
+                일치율 판정 계산 중...
+              </div>
+
+              <!-- 💡 과학적 오차 원인 분석 가이드 -->
+              <div class="p-3 bg-blue-50/80 rounded-lg border border-blue-100 text-[10px] text-blue-900 leading-normal space-y-1">
+                <span class="font-extrabold block text-blue-950 flex items-center gap-1">
+                  🔍 [참고] 탐구활동 오차 원인 분석 가이드
+                </span>
+                <p>
+                  이론치인 중력이 한 일($W$)에 비해 실제 측정된 운동 에너지($E_k$)가 약간 적게 나타나는 경향이 있습니다. 실제 실험 및 이 시뮬레이션에서 발생하는 오차의 핵심 원인은 다음과 같습니다.
+                </p>
+                <ul class="list-disc pl-4 space-y-0.5 font-medium text-slate-700">
+                  <li><strong class="text-indigo-900">공기 저항:</strong> 추가 낙하하면서 공기 분자와 지속해서 부딪쳐 에너지가 미세하게 열에너지로 소실됩니다.</li>
+                  <li><strong class="text-indigo-900">가이드 아크릴 관 마찰:</strong> 수직을 이루는 관의 내부 벽면에 추가 살짝 닿거나 쓸릴 때 생기는 물리적인 마찰력 때문입니다.</li>
+                  <li><strong class="text-indigo-900">속력 측정기 구간 평균 오차:</strong> 센서가 찰나의 순간 속력이 아닌 '센서 내부 2개 광선 사이를 통과한 평균 속력'을 표시하여 아주 미세한 변동이 가미됩니다.</li>
+                </ul>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 3: Interactive Learning Questions, Checklists & Real-world Preparation -->
+        <div id="content-questions" class="p-4 hidden flex flex-col gap-4 flex-grow overflow-y-auto max-h-[480px]">
+          <div>
+            <h3 class="text-sm font-bold text-slate-800">배움활동 정리 및 실제 오프라인 실험 대비 핵심 역량</h3>
+            <p class="text-[10px] text-slate-500">실험을 직접 수행할 때 발생하는 변수들을 파악하고 퀴즈를 풀며 물리적 지식을 넓혀 보세요.</p>
+          </div>
+
+          <!-- Real world lab preparedness core component -->
+          <div class="p-3.5 rounded-xl border-2 border-dashed border-indigo-200 bg-indigo-50/20">
+            <h4 class="text-xs font-black text-indigo-950 flex items-center gap-1.5 mb-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+              </svg>
+              🔧 실제 실험 조작 대비 훈련 (수평 보정 및 오차 예방)
+            </h4>
+            <p class="text-[10px] text-indigo-900 leading-normal mb-3">
+              우리 모둠이 실제 물리 교구로 스탠드를 설치하고 실험할 때, 데이터 오차를 막고 완벽한 결과를 내기 위한 필수 검증 체크리스트입니다. 가상 점검을 먼저 수행해 보세요!
+            </p>
+            
+            <!-- Real-world checklists -->
+            <div class="space-y-2 text-[10px]">
+              <label class="flex items-start gap-2 bg-white p-2 rounded-lg border border-indigo-100 shadow-sm cursor-pointer hover:bg-indigo-50/50">
+                <input type="checkbox" id="chk-lab-1" class="mt-0.5 h-3.5 w-3.5 rounded border-slate-300 text-indigo-600 accent-indigo-600" onchange="checkRealLabSkills()">
+                <div class="leading-tight">
+                  <strong class="text-slate-800">실과 관의 평행 보정:</strong> 투명 아크릴 관을 스탠드에 묶을 때, 관 속에 실을 늘어뜨려 관 중심을 실이 완벽하게 평행 관통하는지 수직계를 확인했습니까?
+                </div>
+              </label>
+
+              <label class="flex items-start gap-2 bg-white p-2 rounded-lg border border-indigo-100 shadow-sm cursor-pointer hover:bg-indigo-50/50">
+                <input type="checkbox" id="chk-lab-2" class="mt-0.5 h-3.5 w-3.5 rounded border-slate-300 text-indigo-600 accent-indigo-600" onchange="checkRealLabSkills()">
+                <div class="leading-tight">
+                  <strong class="text-slate-800">관 내부 충돌 오차 감지:</strong> 추가 내려갈 때 내부 플라스틱 벽에 부딪쳐 '탁' 소리가 났다면, 마찰로 인해 속력이 현저히 감소하므로 해당 시행은 과감히 '무효 처리'하고 재실험해야 함을 인지했습니까?
+                </div>
+              </label>
+
+              <label class="flex items-start gap-2 bg-white p-2 rounded-lg border border-indigo-100 shadow-sm cursor-pointer hover:bg-indigo-50/50">
+                <input type="checkbox" id="chk-lab-3" class="mt-0.5 h-3.5 w-3.5 rounded border-slate-300 text-indigo-600 accent-indigo-600" onchange="checkRealLabSkills()">
+                <div class="leading-tight">
+                  <strong class="text-slate-800">손 낙하 영점 오차 제어:</strong> 실 끝을 가만히 쥔 상태에서 낙하 지점(30cm 등)을 손으로 정지 상태에서 수직 마찰 없이 가볍게 놓았습니까? (힘을 주어 밀거나 튕기면 초속도가 부여되어 큰 오차가 납니다.)
+                </div>
+              </label>
+            </div>
+
+            <!-- Skills milestone response -->
+            <div id="skills-badge" class="hidden mt-3 p-2 bg-emerald-500 text-white text-[10px] text-center font-bold rounded-lg shadow animate-bounce">
+              🎉 준비 완료! 우리 모둠은 실제 실험실에서도 오차가 매우 적은 완벽한 실험을 수행할 자격을 갖추었습니다!
+            </div>
+          </div>
+
+          <!-- Interactive Worksheet Cloze Questions -->
+          <div class="space-y-4">
+            
+            <!-- Question 1: Cloze test -->
+            <div class="p-3 rounded-xl border border-slate-200 bg-slate-50/50">
+              <h4 class="text-[10px] font-extrabold text-indigo-600 mb-0.5">정리하기 1</h4>
+              <p class="text-[11px] font-bold text-slate-800 mb-2">중력이 추에 한 일의 양과 추의 운동 에너지를 비교하여 전환 관계의 빈칸을 완성하세요.</p>
+              
+              <div class="bg-white p-3 rounded-lg border border-slate-200 leading-relaxed text-xs text-slate-700">
+                중력이 추에 한 
+                <input type="text" id="q1-blank1" class="w-12 text-center border-b-2 border-indigo-400 bg-indigo-50/50 rounded focus:outline-none focus:border-indigo-600 focus:bg-indigo-100 font-extrabold px-1 text-indigo-950" placeholder="빈칸 1"> 
+                의 양과 추의 
+                <input type="text" id="q1-blank2" class="w-14 text-center border-b-2 border-indigo-400 bg-indigo-50/50 rounded focus:outline-none focus:border-indigo-600 focus:bg-indigo-100 font-extrabold px-1 text-indigo-950" placeholder="빈칸 2"> 
+                에너지는 거의 일치합니다. 이를 통해 물체가 자유 낙하할 때, 
+                <input type="text" id="q1-blank3" class="w-14 text-center border-b-2 border-indigo-400 bg-indigo-50/50 rounded focus:outline-none focus:border-indigo-600 focus:bg-indigo-100 font-extrabold px-1 text-indigo-950" placeholder="빈칸 3"> 
+                이 물체에 한 일이 모두 물체의 
+                <input type="text" id="q1-blank4" class="w-14 text-center border-b-2 border-indigo-400 bg-indigo-50/50 rounded focus:outline-none focus:border-indigo-600 focus:bg-indigo-100 font-extrabold px-1 text-indigo-950" placeholder="빈칸 4"> 
+                에너지로 전환된다는 것을 알 수 있습니다.
+              </div>
+
+              <div class="flex justify-end gap-2 mt-2">
+                <button onclick="checkCloze(1)" class="bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-[10px] py-1.5 px-3 rounded-lg shadow transition-all">채점하기</button>
+              </div>
+              <div id="q1-cloze-feedback" class="hidden text-[10px] mt-2 p-2.5 rounded-lg leading-relaxed"></div>
+            </div>
+
+            <!-- Question 2: Cloze test -->
+            <div class="p-3 rounded-xl border border-slate-200 bg-slate-50/50">
+              <h4 class="text-[10px] font-extrabold text-indigo-600 mb-0.5">정리하기 2</h4>
+              <p class="text-[11px] font-bold text-slate-800 mb-2">질량이 100 g 대신 200 g인 추를 이용한다면, 중력이 한 일과 운동 에너지는 어떻게 달라질지 토의 빈칸을 채워보세요.</p>
+              
+              <div class="bg-white p-3 rounded-lg border border-slate-200 leading-relaxed text-xs text-slate-700">
+                질량이 200 g인 추를 이용하면 추에 작용하는 중력이 
+                <input type="text" id="q2-blank1" class="w-10 text-center border-b-2 border-indigo-400 bg-indigo-50/50 rounded focus:outline-none focus:border-indigo-600 focus:bg-indigo-100 font-extrabold px-1 text-indigo-950" placeholder="숫자"> 
+                배가 되어, 낙하하는 동안 중력이 추에 한 일의 양도 
+                <input type="text" id="q2-blank2" class="w-10 text-center border-b-2 border-indigo-400 bg-indigo-50/50 rounded focus:outline-none focus:border-indigo-600 focus:bg-indigo-100 font-extrabold px-1 text-indigo-950" placeholder="숫자"> 
+                배가 됩니다. 따라서 추의 운동 에너지 또한 
+                <input type="text" id="q2-blank3" class="w-10 text-center border-b-2 border-indigo-400 bg-indigo-50/50 rounded focus:outline-none focus:border-indigo-600 focus:bg-indigo-100 font-extrabold px-1 text-indigo-950" placeholder="숫자"> 
+                배가 됩니다. (단, 낙하 속력 자체는 질량과 무관하여 동일합니다.)
+              </div>
+
+              <div class="flex justify-end gap-2 mt-2">
+                <button onclick="checkCloze(2)" class="bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-[10px] py-1.5 px-3 rounded-lg shadow transition-all">채점하기</button>
+              </div>
+              <div id="q2-cloze-feedback" class="hidden text-[10px] mt-2 p-2.5 rounded-lg leading-relaxed"></div>
+            </div>
+
+            <!-- Formative Evaluation Multiple Choice 1 -->
+            <div class="p-3 rounded-xl border-2 border-slate-200 bg-white">
+              <span class="bg-blue-100 text-blue-800 text-[9px] font-black px-2 py-0.5 rounded-full">확인 문제 1</span>
+              <p class="text-[11px] font-bold text-slate-800 mt-1 mb-2">다음 보기 중 운동 에너지와 속력 및 질량의 올바른 그래프적 관계를 나타낸 것만을 있는 대로 고른 것은?</p>
+              
+              <!-- Redesigned High-Resolution SVGs (Enlarged Fonts and Bold Lines) -->
+              <div class="grid grid-cols-2 xs:grid-cols-4 gap-2 mb-2.5 bg-slate-50 p-2 rounded-xl text-center font-bold text-[8px] text-slate-600 select-none">
+                
+                <!-- ㄱ. -->
+                <div class="flex flex-col items-center bg-white p-2 rounded-lg border border-slate-200 shadow-sm">
+                  <span class="text-indigo-700 font-black text-xs mb-1">ㄱ.</span>
+                  <svg class="h-24 w-full" viewBox="0 0 120 100">
+                    <path d="M15,5 L15,85 L115,85" stroke="#475569" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M15,2 L11,9 L19,9 Z" fill="#475569" />
+                    <path d="M118,85 L111,81 L111,89 Z" fill="#475569" />
+                    <text x="-45" y="10" transform="rotate(-90)" font-size="8.5" font-weight="900" fill="#1e293b" text-anchor="middle">운동에너지</text>
+                    <text x="95" y="96" font-size="9" font-weight="900" fill="#1e293b" text-anchor="middle">질량</text>
+                    <text x="7" y="95" font-size="9.5" font-weight="900" fill="#64748b" text-anchor="middle">O</text>
+                    <line x1="15" y1="85" x2="105" y2="15" stroke="#4f46e5" stroke-width="2.5" stroke-linecap="round" />
+                    <text x="65" y="20" font-size="8.5" font-weight="900" fill="#0284c7" text-anchor="middle">속력:일정</text>
+                  </svg>
+                </div>
+                
+                <!-- ㄴ. -->
+                <div class="flex flex-col items-center bg-white p-2 rounded-lg border border-slate-200 shadow-sm">
+                  <span class="text-indigo-700 font-black text-xs mb-1">ㄴ.</span>
+                  <svg class="h-24 w-full" viewBox="0 0 120 100">
+                    <path d="M15,5 L15,85 L115,85" stroke="#475569" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M15,2 L11,9 L19,9 Z" fill="#475569" />
+                    <path d="M118,85 L111,81 L111,89 Z" fill="#475569" />
+                    <text x="-45" y="10" transform="rotate(-90)" font-size="8.5" font-weight="900" fill="#1e293b" text-anchor="middle">운동에너지</text>
+                    <text x="95" y="96" font-size="9" font-weight="900" fill="#1e293b" text-anchor="middle">질량</text>
+                    <text x="7" y="95" font-size="9.5" font-weight="900" fill="#64748b" text-anchor="middle">O</text>
+                    <line x1="15" y1="45" x2="105" y2="45" stroke="#4f46e5" stroke-width="2.5" stroke-linecap="round" />
+                    <text x="65" y="20" font-size="8.5" font-weight="900" fill="#0284c7" text-anchor="middle">속력:일정</text>
+                  </svg>
+                </div>
+                
+                <!-- ㄷ. -->
+                <div class="flex flex-col items-center bg-white p-2 rounded-lg border border-slate-200 shadow-sm">
+                  <span class="text-indigo-700 font-black text-xs mb-1">ㄷ.</span>
+                  <svg class="h-24 w-full" viewBox="0 0 120 100">
+                    <path d="M15,5 L15,85 L115,85" stroke="#475569" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M15,2 L11,9 L19,9 Z" fill="#475569" />
+                    <path d="M118,85 L111,81 L111,89 Z" fill="#475569" />
+                    <text x="-45" y="10" transform="rotate(-90)" font-size="8.5" font-weight="900" fill="#1e293b" text-anchor="middle">운동에너지</text>
+                    <text x="95" y="96" font-size="9" font-weight="900" fill="#1e293b" text-anchor="middle">(속력)²</text>
+                    <text x="7" y="95" font-size="9.5" font-weight="900" fill="#64748b" text-anchor="middle">O</text>
+                    <path d="M15,85 Q45,85 105,15" stroke="#4f46e5" stroke-width="2.5" fill="none" stroke-linecap="round" />
+                    <text x="65" y="20" font-size="8.5" font-weight="900" fill="#0284c7" text-anchor="middle">질량:일정</text>
+                  </svg>
+                </div>
+                
+                <!-- ㄹ. -->
+                <div class="flex flex-col items-center bg-white p-2 rounded-lg border border-slate-200 shadow-sm">
+                  <span class="text-indigo-700 font-black text-xs mb-1">ㄹ.</span>
+                  <svg class="h-24 w-full" viewBox="0 0 120 100">
+                    <path d="M15,5 L15,85 L115,85" stroke="#475569" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M15,2 L11,9 L19,9 Z" fill="#475569" />
+                    <path d="M118,85 L111,81 L111,89 Z" fill="#475569" />
+                    <text x="-45" y="10" transform="rotate(-90)" font-size="8.5" font-weight="900" fill="#1e293b" text-anchor="middle">운동에너지</text>
+                    <text x="95" y="96" font-size="9" font-weight="900" fill="#1e293b" text-anchor="middle">(속력)²</text>
+                    <text x="7" y="95" font-size="9.5" font-weight="900" fill="#64748b" text-anchor="middle">O</text>
+                    <line x1="15" y1="85" x2="105" y2="15" stroke="#4f46e5" stroke-width="2.5" stroke-linecap="round" />
+                    <text x="65" y="20" font-size="8.5" font-weight="900" fill="#0284c7" text-anchor="middle">질량:일정</text>
+                  </svg>
+                </div>
+
+              </div>
+
+              <!-- Options Grid -->
+              <div class="grid grid-cols-2 sm:grid-cols-5 gap-1.5 mb-1.5">
+                <button onclick="checkQuiz(1, 1)" id="q1-opt1" class="py-1 px-1.5 rounded border border-slate-200 text-left text-[10px] font-medium">① ㄱ</button>
+                <button onclick="checkQuiz(1, 2)" id="q1-opt2" class="py-1 px-1.5 rounded border border-slate-200 text-left text-[10px] font-medium">② ㄱ, ㄷ</button>
+                <button onclick="checkQuiz(1, 3)" id="q1-opt3" class="py-1 px-1.5 rounded border border-slate-200 text-left text-[10px] font-medium">③ ㄱ, ㄹ</button>
+                <button onclick="checkQuiz(1, 4)" id="q1-opt4" class="py-1 px-1.5 rounded border border-slate-200 text-left text-[10px] font-medium">④ ㄴ, ㄷ</button>
+                <button onclick="checkQuiz(1, 5)" id="q1-opt5" class="py-1 px-1.5 rounded border border-slate-200 text-left text-[10px] font-medium">⑤ ㄴ, ㄹ</button>
+              </div>
+              <div id="q1-feedback" class="hidden text-[10px] mt-1.5 p-2 rounded-lg font-medium"></div>
+            </div>
+
+            <!-- Formative Evaluation Multiple Choice 2 -->
+            <div class="p-3 rounded-xl border-2 border-slate-200 bg-white">
+              <span class="bg-blue-100 text-blue-800 text-[9px] font-black px-2 py-0.5 rounded-full">확인 문제 2</span>
+              <p class="text-[11px] font-bold text-slate-800 mt-1 mb-2">그림과 같이 추가 매달린 A 지점으로부터 20 cm 간격으로 속력 측정기를 설치한 후, 실을 잘라 추를 낙하시켰다. 속력 측정기에 나타난 값이 가장 큰 지점은?(단, 공기와의 마찰은 무시한다.)</p>
+              
+              <!-- High fidelity SVG mimicking image_3404e7.png -->
+              <div class="flex flex-col sm:flex-row items-center gap-4 bg-slate-900 text-white p-3 rounded-2xl mb-3 border border-slate-700 select-none">
+                <div class="w-full sm:w-1/2 flex justify-center">
+                  <svg class="h-64 w-44" viewBox="0 0 160 270">
+                    <!-- Stand Base -->
+                    <rect x="20" y="245" width="120" height="15" rx="3" fill="#334155" />
+                    <!-- Stand Rod -->
+                    <rect x="110" y="10" width="8" height="235" fill="#64748b" />
+                    
+                    <!-- Paper Catch Container -->
+                    <ellipse cx="65" cy="235" rx="18" ry="6" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1" />
+                    <path d="M47,235 L52,245 L78,245 L83,235 Z" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1" />
+
+                    <!-- Clamps support bars -->
+                    <rect x="90" y="27" width="22" height="6" rx="1" fill="#475569" />
+                    <rect x="95" y="87" width="17" height="6" rx="1" fill="#475569" />
+                    <rect x="95" y="147" width="17" height="6" rx="1" fill="#475569" />
+                    <rect x="95" y="207" width="17" height="6" rx="1" fill="#475569" />
+
+                    <!-- Hanging rod at A -->
+                    <rect x="50" y="29" width="40" height="3" fill="#94a3b8" />
+                    <!-- Cut thread visualization -->
+                    <line x1="65" y1="32" x2="65" y2="44" stroke="#e2e8f0" stroke-width="1" />
+                    <line x1="65" y1="49" x2="65" y2="56" stroke="#94a3b8" stroke-width="1" stroke-dasharray="1,1" />
+
+                    <!-- Scissor Icon near A -->
+                    <g transform="translate(36, 32)">
+                      <!-- Rings -->
+                      <circle cx="6" cy="4" r="2.5" fill="none" stroke="#f43f5e" stroke-width="1" />
+                      <circle cx="6" cy="11" r="2.5" fill="none" stroke="#f43f5e" stroke-width="1" />
+                      <!-- Crossed Blades -->
+                      <line x1="8" y1="5" x2="19" y2="10" stroke="#cbd5e1" stroke-width="1.2" />
+                      <line x1="8" y1="10" x2="19" y2="5" stroke="#cbd5e1" stroke-width="1.2" />
+                      <!-- Pivot -->
+                      <circle cx="11" cy="7.5" r="0.8" fill="#475569" />
+                    </g>
+
+                    <!-- Hanging Weight (추) at A -->
+                    <path d="M62,56 C62,53 68,53 68,56" fill="none" stroke="#fbbf24" stroke-width="1" />
+                    <rect x="61" y="56" width="8" height="10" rx="1" fill="#d97706" />
+                    <text x="44" y="66" font-size="14" font-weight="900" fill="#f8fafc">A</text>
+
+                    <!-- Photogate B -->
+                    <g transform="translate(63, 80)">
+                      <rect x="0" y="0" width="22" height="18" rx="2" fill="#1e293b" stroke="#475569" stroke-width="1.5" />
+                      <rect x="4" y="4" width="14" height="10" rx="0.5" fill="#0f172a" />
+                      <circle cx="11" cy="9" r="1.5" fill="#ef4444" />
+                    </g>
+                    <text x="44" y="94" font-size="14" font-weight="900" fill="#f8fafc">B</text>
+
+                    <!-- Photogate C -->
+                    <g transform="translate(63, 140)">
+                      <rect x="0" y="0" width="22" height="18" rx="2" fill="#1e293b" stroke="#475569" stroke-width="1.5" />
+                      <rect x="4" y="4" width="14" height="10" rx="0.5" fill="#0f172a" />
+                      <circle cx="11" cy="9" r="1.5" fill="#ef4444" />
+                    </g>
+                    <text x="44" y="154" font-size="14" font-weight="900" fill="#f8fafc">C</text>
+
+                    <!-- Photogate D -->
+                    <g transform="translate(63, 200)">
+                      <rect x="0" y="0" width="22" height="18" rx="2" fill="#1e293b" stroke="#475569" stroke-width="1.5" />
+                      <rect x="4" y="4" width="14" height="10" rx="0.5" fill="#0f172a" />
+                      <circle cx="11" cy="9" r="1.5" fill="#ef4444" />
+                    </g>
+                    <text x="44" y="214" font-size="14" font-weight="900" fill="#f8fafc">D</text>
+
+                    <!-- 20cm Height arrows -->
+                    <!-- A to B -->
+                    <g stroke="#94a3b8" stroke-width="1">
+                      <line x1="128" y1="56" x2="128" y2="88" />
+                      <polygon points="128,56 125,61 131,61" fill="#94a3b8" />
+                      <polygon points="128,88 125,83 131,83" fill="#94a3b8" />
+                    </g>
+                    <text x="135" y="76" font-size="8" font-weight="bold" fill="#94a3b8">20 cm</text>
+
+                    <!-- B to C -->
+                    <g stroke="#94a3b8" stroke-width="1">
+                      <line x1="128" y1="94" x2="128" y2="148" />
+                      <polygon points="128,94 125,99 131,99" fill="#94a3b8" />
+                      <polygon points="128,148 125,143 131,143" fill="#94a3b8" />
+                    </g>
+                    <text x="135" y="126" font-size="8" font-weight="bold" fill="#94a3b8">20 cm</text>
+
+                    <!-- C to D -->
+                    <g stroke="#94a3b8" stroke-width="1">
+                      <line x1="128" y1="154" x2="128" y2="208" />
+                      <polygon points="128,154 125,159 131,159" fill="#94a3b8" />
+                      <polygon points="128,208 125,203 131,203" fill="#94a3b8" />
+                    </g>
+                    <text x="135" y="186" font-size="8" font-weight="bold" fill="#94a3b8">20 cm</text>
+                  </svg>
+                </div>
+                <div class="w-full sm:w-1/2 text-xs leading-normal text-slate-300">
+                  <span class="font-bold text-yellow-400 block mb-1">🛠️ 모식도 분석 힌트</span>
+                  <p class="mb-2">실을 끊어 추를 자유 낙하시키면, 아래로 낙하할수록 지구 중력으로부터 지속적인 힘(일)을 받아 운동 속도가 점점 빨라집니다.</p>
+                  <p class="text-[10px] text-slate-400">구간 간격: $AB = BC = CD = 20\text{ cm}$</p>
+                </div>
+              </div>
+
+              <!-- Options Grid (Cleaned: No answers explicitly hinted) -->
+              <div class="grid grid-cols-2 sm:grid-cols-5 gap-1.5 mb-1.5">
+                <button onclick="checkQuiz(2, 1)" id="q2-opt1" class="py-1 px-1.5 rounded border border-slate-200 text-left text-[10px] font-medium">① A</button>
+                <button onclick="checkQuiz(2, 2)" id="q2-opt2" class="py-1 px-1.5 rounded border border-slate-200 text-left text-[10px] font-medium">② B</button>
+                <button onclick="checkQuiz(2, 3)" id="q2-opt3" class="py-1 px-1.5 rounded border border-slate-200 text-left text-[10px] font-medium">③ C</button>
+                <button onclick="checkQuiz(2, 4)" id="q2-opt4" class="py-1 px-1.5 rounded border border-slate-200 text-left text-[10px] font-medium">④ D</button>
+                <button onclick="checkQuiz(2, 5)" id="q2-opt5" class="py-1 px-1.5 rounded border border-slate-200 text-left text-[10px] font-medium">⑤ 모두 동일</button>
+              </div>
+              <div id="q2-feedback" class="hidden text-[10px] mt-1.5 p-2 rounded-lg font-medium"></div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Student Info Input & Generation Modal -->
+  <div id="report-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 hidden">
+    <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl border border-slate-100 overflow-hidden transform scale-95 transition-transform duration-300">
+      <div class="bg-gradient-to-r from-indigo-700 to-blue-800 text-white p-4">
+        <h3 class="font-black text-sm flex items-center gap-1.5">
+          📄 탐구 보고서 자동 추출 및 저장
+        </h3>
+        <p class="text-[10px] text-indigo-100 mt-1">학생 개인 성적 제출 및 포트폴리오 저장을 위해 학생 정보와 실험 평가를 이미지(PNG)로 병합합니다.</p>
+      </div>
+      <div class="p-5 flex flex-col gap-4">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-[10px] font-bold text-slate-500 mb-1">학년/반</label>
+            <input type="text" id="report-grade-class" placeholder="예: 3학년 2반" class="w-full text-xs p-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-slate-500 mb-1">번호</label>
+            <input type="text" id="report-num" placeholder="예: 15번" class="w-full text-xs p-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+          </div>
+        </div>
+        <div>
+          <label class="block text-[10px] font-bold text-slate-500 mb-1">학생 이름</label>
+          <input type="text" id="report-student-name" placeholder="예: 홍길동" class="w-full text-xs p-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-[10px] font-bold text-slate-500 mb-1">공동 실험자 / 모둠명</label>
+          <input type="text" id="report-group" placeholder="예:3모둠" class="w-full text-xs p-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+        </div>
+
+        <div class="bg-slate-50 p-3 rounded-lg border border-slate-100 flex flex-col gap-1 text-[10px] text-slate-600">
+          <span class="font-bold text-slate-800">📌 포함될 데이터 리포트:</span>
+          <span class="flex justify-between">✓ 표준 높이별 속력 데이터 및 평균치 <span id="r-status-data" class="font-bold text-emerald-600">준비완료</span></span>
+          <span class="flex justify-between">✓ 물리 공식 수치 보존 일치 여부 판정 <span id="r-status-calc" class="font-bold text-rose-500">미완료</span></span>
+          <span class="flex justify-between">✓ 실전 실험 대비 사전 훈련 점검 <span id="r-status-check" class="font-bold text-rose-500">0/3 점검</span></span>
+        </div>
+
+        <div class="flex gap-2 justify-end pt-2">
+          <button onclick="closeReportModal()" class="py-2 px-4 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-100 transition-colors">취소</button>
+          <button onclick="generateReportAndDownload()" class="py-2 px-5 rounded-xl text-xs font-black bg-indigo-600 hover:bg-indigo-700 text-white shadow-md transition-all flex items-center gap-1.5">
+            💾 보고서 PNG 저장 시작
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Overlay for Image processing -->
+  <div id="loading-overlay" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-[200] flex flex-col items-center justify-center hidden">
+    <div class="animate-spin rounded-full h-10 w-10 border-4 border-yellow-400 border-t-transparent mb-4"></div>
+    <p class="text-white font-bold text-sm">A4 규격 정밀 탐구 보고서 컴파일 중...</p>
+    <p class="text-slate-400 text-[11px] mt-1">학생 데이터 및 수식을 정렬하여 고해상도 PNG 파일로 내보내고 있습니다.</p>
+  </div>
+
+  <!-- Printable Hidden A4 Paper Report Template (Offscreen & Perfect Non-LaTeX unicode formatting to prevent canvas capture bugs) -->
+  <div id="printable-report" class="absolute -left-[9999px] top-0 bg-white text-slate-900 p-10 w-[800px] leading-relaxed border-4 border-double border-slate-400 flex flex-col gap-6 font-sans">
+    
+    <!-- Report Title -->
+    <div class="text-center border-b-4 border-slate-800 pb-4">
+      <span class="text-xs font-bold text-slate-500 tracking-widest uppercase block mb-1">중등 과학과 배움 활동 보고서</span>
+      <h1 class="text-2xl font-black text-slate-950 tracking-tight">중력이 한 일과 운동 에너지의 관계 분석</h1>
+      <p class="text-xs text-slate-600 mt-1">Ⅲ-2. 일과 에너지 | ❸ 중력이 일을 하면 에너지가 생겨</p>
+    </div>
+
+    <!-- Student Metadata Section -->
+    <div class="grid grid-cols-3 gap-2 border border-slate-300 bg-slate-50/50 p-3 rounded text-xs">
+      <div><strong>소속 학년/반:</strong> <span id="p-grade-class">-</span></div>
+      <div><strong>학생 이름:</strong> <span id="p-student-name">-</span></div>
+      <div><strong>학번(번호):</strong> <span id="p-num">-</span></div>
+      <div class="col-span-2"><strong>공동 실험 조력자 / 모둠:</strong> <span id="p-group">-</span></div>
+      <div><strong>보고서 저장일:</strong> <span id="p-date">-</span></div>
+    </div>
+
+    <!-- Section 1: Dynamic Data Grid (Beautifully aligned structure, 5 columns: Heights header matching 5 rows) -->
+    <div class="flex flex-col gap-2">
+      <h3 class="text-sm font-black text-slate-950 border-l-4 border-indigo-600 pl-2">1. 자유 낙하 실험 데이터 실측표</h3>
+      <table class="w-full text-[11px] text-center border-collapse border border-slate-300">
+        <thead>
+          <tr class="bg-slate-100 font-bold">
+            <th class="border border-slate-300 py-1.5 bg-slate-50 w-[25%]">추의 낙하 높이</th>
+            <th class="border border-slate-300 py-1.5 bg-slate-50 w-[25%]">10 cm</th>
+            <th class="border border-slate-300 py-1.5 bg-slate-50 w-[25%]">20 cm</th>
+            <th class="border border-slate-300 py-1.5 bg-slate-50 w-[25%]">30 cm</th>
+          </tr>
+        </thead>
+        <tbody id="p-table-body" class="divide-y divide-slate-200">
+          <!-- Dynamically populated rows in script aligning perfectly with the headers -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Section 2: Mechanics Equation Analysis and calculations (Safely formatted without latex block inside capturing layout) -->
+    <div class="flex flex-col gap-2">
+      <h3 class="text-sm font-black text-slate-950 border-l-4 border-indigo-600 pl-2">2. 역학적 에너지 변환 및 보존 계산 검증</h3>
+      <div class="grid grid-cols-2 gap-4 text-xs">
+        <div class="border border-slate-200 p-3 rounded bg-slate-50/40">
+          <strong class="text-indigo-900 block mb-1">① 중력이 추에 한 일 (이론치)</strong>
+          <span class="text-[11px] block text-slate-600">공식: W = 9.8 × m(kg) × h(m)</span>
+          <p id="p-calc-work" class="mt-2 font-black text-indigo-700 bg-indigo-50 p-1.5 rounded text-center border border-indigo-100"></p>
+        </div>
+        <div class="border border-slate-200 p-3 rounded bg-slate-50/40">
+          <strong class="text-amber-900 block mb-1">② 낙하 후 획득한 운동 에너지 (실측치)</strong>
+          <span class="text-[11px] block text-slate-600">공식: Ek = 0.5 × m(kg) × v²(m/s)²</span>
+          <p id="p-calc-ke" class="mt-2 font-black text-amber-700 bg-amber-50 p-1.5 rounded text-center border border-amber-100"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 3: Physical Laboratory Preparedness Checklists -->
+    <div class="flex flex-col gap-2">
+      <h3 class="text-sm font-black text-slate-950 border-l-4 border-indigo-600 pl-2">3. 실제 오프라인 실험 대비 핵심 훈련 및 예방책</h3>
+      <div class="border border-slate-200 p-3 rounded text-[11px] space-y-1.5">
+        <div class="flex justify-between">
+          <span>✓ 실과 아크릴 플라스틱 가이드 관의 완벽한 수평 보정 상태 점검</span>
+          <span id="p-chk-1" class="font-bold text-rose-600">미수행</span>
+        </div>
+        <div class="flex justify-between">
+          <span>✓ 관 내부 쓸림/마찰로 인한 비정상 소실 오차 무효화 인식 여부</span>
+          <span id="p-chk-2" class="font-bold text-rose-600">미수행</span>
+        </div>
+        <div class="flex justify-between">
+          <span>✓ 낙하 시작 시 추가 마찰이나 초속도(밀치기) 제어 인지 여부</span>
+          <span id="p-chk-3" class="font-bold text-rose-600">미수행</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 4: Worksheet Questions Score summary -->
+    <div class="flex flex-col gap-2">
+      <h3 class="text-sm font-black text-slate-950 border-l-4 border-indigo-600 pl-2">4. 배움정리 학습지 수행 상황</h3>
+      <div class="grid grid-cols-2 gap-4 text-[11px] text-slate-700">
+        <div class="border border-slate-200 p-2.5 rounded bg-slate-50/30">
+          <strong>배움정리 1 (일과 운동에너지 전환 관계):</strong>
+          <p id="p-cloze-1" class="mt-1 font-bold text-slate-900 leading-normal"></p>
+        </div>
+        <div class="border border-slate-200 p-2.5 rounded bg-slate-50/30">
+          <strong>배움정리 2 (추의 질량 변화와 일):</strong>
+          <p id="p-cloze-2" class="mt-1 font-bold text-slate-900 leading-normal"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 5: Dynamic Evaluation Answers tracker (Removed correct answers from description, only showing chosen answers & conceptual explanations) -->
+    <div class="flex flex-col gap-2">
+      <h3 class="text-sm font-black text-slate-950 border-l-4 border-indigo-600 pl-2">5. 형성 평가 확인 문제 수행 결과 (첫 번째 응답 기준)</h3>
+      <div class="grid grid-cols-1 gap-3 text-[11px] text-slate-700">
+        <!-- Question 1 Block -->
+        <div class="border border-slate-200 p-3 rounded bg-slate-50/40">
+          <div class="flex justify-between items-center mb-1.5">
+            <strong class="text-slate-900 text-[11px]">[확인 문제 1] 운동 에너지와 속력 및 질량의 올바른 그래프 관계</strong>
+            <span id="p-quiz1-status" class="px-2 py-0.5 rounded text-[10px] font-black bg-slate-100 text-slate-500 border border-slate-200">미수행</span>
+          </div>
+          <p class="text-slate-600 leading-relaxed mb-1">
+            <strong>질문:</strong> 다음 보기 중 운동 에너지와 속력 및 질량의 올바른 그래프적 관계를 나타낸 것만을 있는 대로 고른 것은?
+          </p>
+          <div class="bg-white/80 p-1.5 rounded border border-slate-100 text-slate-500 text-[10px] mb-1.5 leading-snug">
+            <strong>* 문항 해설:</strong> 운동에너지($E_k$) 공식은 $E_k = \frac{1}{2}mv^2$ 입니다. 따라서 속력($v$)이 일정할 때 운동에너지는 질량($m$)에 정비례하여 직선 형태를 보이며(ㄱ), 질량이 일정할 때 운동에너지는 속력의 제곱($v^2$)에 정비례하므로 가로축이 $v^2$일 때도 직선 형태를 보입니다(ㄹ).
+          </div>
+          <p class="text-[11px]">
+            <strong>내가 선택한 첫 답안:</strong> <span id="p-quiz1-choice" class="font-extrabold text-indigo-700">-</span>
+          </p>
+        </div>
+
+        <!-- Question 2 Block -->
+        <div class="border border-slate-200 p-3 rounded bg-slate-50/40">
+          <div class="flex justify-between items-center mb-1.5">
+            <strong class="text-slate-900 text-[11px]">[확인 문제 2] 자유 낙하 거리와 속력의 크기 비교</strong>
+            <span id="p-quiz2-status" class="px-2 py-0.5 rounded text-[10px] font-black bg-slate-100 text-slate-500 border border-slate-200">미수행</span>
+          </div>
+          <p class="text-slate-600 leading-relaxed mb-1.5">
+            <strong>질문:</strong> 그림과 같이 추가 매달린 A 지점으로부터 20 cm 간격으로 속력 측정기를 설치한 후, 실을 잘라 추를 낙하시켰다. 속력 측정기에 나타난 값이 가장 큰 지점은?
+          </p>
+          <div class="bg-white/80 p-1.5 rounded border border-slate-100 text-slate-500 text-[10px] mb-1.5 leading-snug">
+            <strong>* 문항 해설:</strong> 지구가 물체에 해준 중력의 일($W = mgh$)은 물체의 운동 에너지($E_k = \frac{1}{2}mv^2$)로 고스란히 전환됩니다. 추가 아래로 많이 낙하할수록(낙하한 거리 $h$가 증가할수록) 중력이 추에 해준 누적 일의 양이 더 많아져 최종 속력과 운동 에너지가 가장 커집니다.
+          </div>
+          <p class="text-[11px]">
+            <strong>내가 선택한 첫 답안:</strong> <span id="p-quiz2-choice" class="font-extrabold text-indigo-700">-</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer of report (Removed signature, rating, and redundant proof texts) -->
+    <div class="mt-auto pt-4 border-t border-slate-300 text-center text-xs text-slate-500">
+      <span>중학교 과학 가상 실험 시스템 (가상-실제 하이브리드 교실)</span>
+    </div>
+
+  </div>
+
+  <!-- Notification Toast Container -->
+  <div id="toast" class="fixed bottom-5 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white text-xs py-2 px-5 rounded-full shadow-lg opacity-0 transition-opacity duration-300 pointer-events-none z-50 flex items-center gap-2">
+    <span>💡 팁 메시지</span>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-slate-800 text-slate-400 text-center py-2.5 text-[10px] border-t border-slate-700">
+    <p>© 2026 중학교 과학 가상 탐구실. 실시간 가상-실제 하이브리드 실험실</p>
+  </footer>
+
+  <!-- Script for Physics Simulation Logic -->
+  <script>
+    // System variables
+    let mass = 100; // in grams (100 or 200)
+    let height = 30; // in cm
+    let velocity = 0; // calculated sensor velocity (m/s)
+    let isFrictionOn = true; // Actual friction toggle
+    let isRunning = false;
+    let records = {
+      10: [],
+      20: [],
+      30: []
+    };
+
+    // User calculations state variables
+    let isWorkVerified = false;
+    let isKeVerified = false;
+
+    // First Response Trackers for Quizzes (Strict capture engine)
+    let quiz1FirstChoice = null;
+    let quiz1FirstCorrect = null;
+    let quiz2FirstChoice = null;
+    let quiz2FirstCorrect = null;
+
+    // DOM References
+    let fallingWeight, stringLine, sensorLed, speedDisplay, sliderVal, currentMassHLbl;
+    
+    // Physics constant
+    const g = 9.8;
+
+    const SENSOR_Y = 235;
+    const PIXELS_PER_CM = 4;
+
+    function getWeightY(heightCm) {
+      return SENSOR_Y - (heightCm * PIXELS_PER_CM);
+    }
+
+    // Safely assign DOM element handles upon window load to avoid null target exceptions
+    function initElements() {
+      fallingWeight = document.getElementById('falling-weight');
+      stringLine = document.getElementById('string-line');
+      sensorLed = document.getElementById('sensor-led');
+      speedDisplay = document.getElementById('speed-display');
+      sliderVal = document.getElementById('slider-val');
+      currentMassHLbl = document.getElementById('current-mass-h-lbl');
+    }
+
+    // Initialize physical positioning
+    function updateWeightPosition() {
+      if (isRunning) return;
+      const targetY = getWeightY(height);
+      
+      if (fallingWeight) {
+        fallingWeight.setAttribute('transform', `translate(150, ${targetY})`);
+      }
+      
+      // Update hanging string length safely
+      const stringLength = targetY - 10;
+      if (stringLine) {
+        stringLine.setAttribute('y1', `-${stringLength}`);
+        stringLine.setAttribute('y2', `-8`);
+      }
+
+      const heightText = document.getElementById('sim-height-text');
+      if (heightText) {
+        heightText.innerText = `${height.toFixed(1)} cm`;
+      }
+      
+      if (currentMassHLbl) {
+        currentMassHLbl.innerText = `${mass}g, ${height}cm`;
+      }
+      
+      // Sync numerical variables info on calculation tab safely
+      const stateMass = document.getElementById('calc-state-mass');
+      if (stateMass) {
+        stateMass.innerText = `${(mass / 1000).toFixed(1)} kg`;
+      }
+      const stateHeight = document.getElementById('calc-state-height');
+      if (stateHeight) {
+        stateHeight.innerText = `${(height / 100).toFixed(2)} m`;
+      }
+      
+      // Reset calculation validations whenever parameters change
+      resetCalculatorsUI();
+      updateCalculators();
+    }
+
+    // Set Weight Mass
+    function setMass(newMass) {
+      if (isRunning) return;
+      mass = newMass;
+      
+      const btn100 = document.getElementById('btn-mass-100');
+      const btn200 = document.getElementById('btn-mass-200');
+      const weightBody = document.getElementById('weight-body');
+      const weightLabel = document.getElementById('weight-label');
+
+      if (newMass === 100) {
+        if (btn100) btn100.className = "py-1.5 px-3 rounded-lg border-2 border-indigo-600 bg-indigo-50 text-indigo-700 font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-sm";
+        if (btn200) btn200.className = "py-1.5 px-3 rounded-lg border-2 border-slate-200 text-slate-600 font-bold text-xs hover:bg-slate-50 transition-all flex items-center justify-center gap-1.5";
+        
+        const span100 = btn100 ? btn100.querySelector('span') : null;
+        const span200 = btn200 ? btn200.querySelector('span') : null;
+        if (span100) span100.className = "h-2.5 w-2.5 rounded-full border-[3px] border-indigo-600";
+        if (span200) span200.className = "h-2.5 w-2.5 rounded-full border border-slate-300";
+        
+        if (weightBody) {
+          weightBody.setAttribute('fill', '#d97706'); // Orange amber
+          weightBody.setAttribute('stroke', '#b45309');
+        }
+        if (weightLabel) weightLabel.innerText = "100g";
+      } else {
+        if (btn100) btn100.className = "py-1.5 px-3 rounded-lg border-2 border-slate-200 text-slate-600 font-bold text-xs hover:bg-slate-50 transition-all flex items-center justify-center gap-1.5";
+        if (btn200) btn200.className = "py-1.5 px-3 rounded-lg border-2 border-indigo-600 bg-indigo-50 text-indigo-700 font-bold text-xs transition-all flex items-center justify-center gap-1.5 shadow-sm";
+        
+        const span100 = btn100 ? btn100.querySelector('span') : null;
+        const span200 = btn200 ? btn200.querySelector('span') : null;
+        if (span100) span100.className = "h-2.5 w-2.5 rounded-full border border-slate-300";
+        if (span200) span200.className = "h-2.5 w-2.5 rounded-full border-[3px] border-indigo-600";
+        
+        if (weightBody) {
+          weightBody.setAttribute('fill', '#475569'); // Dark steel gray
+          weightBody.setAttribute('stroke', '#1e293b');
+        }
+        if (weightLabel) weightLabel.innerText = "200g";
+      }
+      showToast(`질량 ${mass}g 설정 완료`);
+      updateWeightPosition();
+    }
+
+    // Set Height Button Action
+    function setHeight(val) {
+      if (isRunning) return;
+      height = parseFloat(val);
+      if (sliderVal) sliderVal.innerText = `${height} cm`;
+      
+      // Reset button active styles
+      [10, 20, 30].forEach(p => {
+        const btn = document.getElementById(`preset-${p}`);
+        if (btn) {
+          if (p === height) {
+            btn.className = "py-2.5 px-2 rounded-xl border-2 border-indigo-600 bg-indigo-50 text-indigo-700 font-bold text-xs transition-all flex items-center justify-center shadow-sm";
+          } else {
+            btn.className = "py-2.5 px-2 rounded-xl border-2 border-slate-200 text-slate-600 font-medium text-xs hover:bg-slate-50 transition-all flex items-center justify-center";
+          }
+        }
+      });
+
+      updateWeightPosition();
+    }
+
+    // Toggle simulation condition (Actual vs Vacuum)
+    function toggleCondition() {
+      isFrictionOn = !isFrictionOn;
+      const toggleCircle = document.getElementById('toggle-circle');
+      const toggleBtn = document.getElementById('btn-toggle-condition');
+      const desc = document.getElementById('condition-desc');
+
+      if (isFrictionOn) {
+        if (toggleBtn) toggleBtn.className = "relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none bg-indigo-600";
+        if (toggleCircle) toggleCircle.className = "pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out translate-x-4";
+        if (desc) desc.innerText = "공기 마찰과 실제 오차가 가상 반영됩니다.";
+        showToast("실제 공기 저항 모드 적용");
+      } else {
+        if (toggleBtn) toggleBtn.className = "relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none bg-slate-300";
+        if (toggleCircle) toggleCircle.className = "pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out translate-x-0";
+        if (desc) desc.innerText = "공기 마찰이 차단된 이상 진공 상태입니다.";
+        showToast("이상 진공(Vacuum) 모드 적용");
+      }
+      resetSimulation();
+    }
+
+    // Calculate velocity based on physics
+    function computeFinalVelocity() {
+      const h_meter = height / 100.0;
+      let idealV = Math.sqrt(2 * g * h_meter); // v = sqrt(2gh)
+      
+      if (isFrictionOn) {
+        const lossFactor = 0.992 + (Math.random() * 0.008 - 0.004); // minor random friction loss
+        idealV = idealV * Math.sqrt(lossFactor);
+        const uncertainty = (Math.random() * 0.04 - 0.02); // actual photo sensor fluctuations
+        return Math.max(0.1, idealV + uncertainty);
+      } else {
+        return idealV;
+      }
+    }
+
+    // Run Free Fall Animation with Auto-Recording
+    function startDrop() {
+      if (isRunning) return;
+      isRunning = true;
+      
+      const stateText = document.getElementById('sim-state-text');
+      if (stateText) {
+        stateText.innerText = "낙하 중!!!";
+        stateText.className = "text-rose-500 font-bold animate-pulse";
+      }
+      if (speedDisplay) speedDisplay.innerText = "0.00";
+      if (sensorLed) sensorLed.setAttribute('fill', '#ef4444');
+
+      const startY = getWeightY(height);
+      const endY = SENSOR_Y; // Photogate Sensor position
+      const groundY = 270; // bottom of paper cup top edge
+      
+      const heightMeter = height / 100.0;
+      const t_fall = Math.sqrt((2 * heightMeter) / g); // fall time in sec
+      
+      let startTime = null;
+
+      function anim(timestamp) {
+        if (!startTime) startTime = timestamp;
+        let elapsed = (timestamp - startTime) / 1000; // in seconds
+        
+        const speedMultiplier = 1.0; 
+        const simulatedT = elapsed * speedMultiplier;
+
+        if (simulatedT < t_fall) {
+          // Normal physics drop
+          const currentH = heightMeter - (0.5 * g * simulatedT * simulatedT);
+          const currentY = SENSOR_Y - (currentH * 100 * PIXELS_PER_CM);
+          
+          if (currentY >= endY) {
+            if (sensorLed) sensorLed.setAttribute('fill', '#10b981'); // Change sensor led to green
+            if (velocity === 0) {
+              velocity = computeFinalVelocity();
+              if (speedDisplay) speedDisplay.innerText = velocity.toFixed(2);
+            }
+          }
+
+          if (fallingWeight) fallingWeight.setAttribute('transform', `translate(150, ${Math.min(groundY, currentY)})`);
+          requestAnimationFrame(anim);
+        } else {
+          // Finished fall, collision with paper cup
+          if (fallingWeight) fallingWeight.setAttribute('transform', `translate(150, ${groundY})`);
+          
+          const flash = document.getElementById('collision-flash');
+          if (flash) {
+            flash.style.opacity = "0.2";
+            setTimeout(() => flash.style.opacity = "0", 150);
+          }
+
+          // Update readings
+          if (sensorLed) sensorLed.setAttribute('fill', '#10b981');
+          if (velocity === 0) {
+            velocity = computeFinalVelocity();
+            if (speedDisplay) speedDisplay.innerText = velocity.toFixed(2);
+          }
+
+          if (stateText) {
+            stateText.innerText = "낙하 완료";
+            stateText.className = "text-emerald-500 font-bold";
+          }
+          isRunning = false;
+          
+          // AUTO RECORD TRIGGER
+          autoRecordSpeed(height, velocity);
+          updateCalculators();
+        }
+      }
+
+      velocity = 0;
+      requestAnimationFrame(anim);
+    }
+
+    // Auto-record logic after a drop
+    function autoRecordSpeed(h_val, v_val) {
+      const standardHeights = [10, 20, 30];
+      if (!standardHeights.includes(h_val)) {
+        showToast(`⚠️ 높이 ${h_val}cm는 표준 실험 규격(10/20/30)이 아니므로 표에 automatic하게 기록이 누적되지 않습니다.`);
+        return;
+      }
+
+      if (records[h_val].length >= 5) {
+        showToast(`💡 ${h_val}cm 기록은 이미 5회 완료되었습니다. (초기화 후 재시행 가능)`);
+        return;
+      }
+
+      records[h_val].push(v_val);
+      const trialNum = records[h_val].length;
+
+      // Update Table Cell UI
+      const cell = document.getElementById(`cell-${h_val}-${trialNum}`);
+      if (cell) {
+        cell.innerText = v_val.toFixed(2);
+        cell.className = "py-1.5 px-1 border-r border-slate-200 font-black text-indigo-700 bg-indigo-50/50";
+      }
+
+      // Compute and update Average
+      const sum = records[h_val].reduce((a, b) => a + b, 0);
+      const avg = sum / records[h_val].length;
+      const avgCell = document.getElementById(`cell-${h_val}-avg`);
+      if (avgCell) {
+        avgCell.innerText = avg.toFixed(2);
+      }
+
+      showToast(`⚡ [자동 기록 완료] ${h_val}cm의 ${trialNum}회 속력 ${v_val.toFixed(2)} m/s가 등록되었습니다.`);
+
+      // Sync average speed to calculation tab instantly
+      updateCalculators();
+
+      // Update Analysis summary calculations table in background
+      const m_kg = 0.1; // Baseline is 100g
+      const ke_calc = 0.5 * m_kg * avg * avg;
+      const textCell = document.getElementById(`calc-ke-${h_val}`);
+      if (textCell) {
+        textCell.innerText = `${ke_calc.toFixed(3)} J`;
+        textCell.className = "py-1.5 border-r border-slate-200 font-bold text-amber-700 bg-amber-50/20";
+      }
+    }
+
+    // Reset weights
+    function resetSimulation() {
+      if (isRunning) return;
+      velocity = 0;
+      if (speedDisplay) speedDisplay.innerText = "0.00";
+      if (sensorLed) sensorLed.setAttribute('fill', '#ef4444');
+      
+      const stateText = document.getElementById('sim-state-text');
+      if (stateText) {
+        stateText.innerText = "낙하 대기 중";
+        stateText.className = "text-indigo-400 font-bold";
+      }
+      updateWeightPosition();
+    }
+
+    // Helper to safely trigger MathJax formatting updates
+    function triggerMathJax() {
+      if (window.MathJax && typeof MathJax.typesetPromise === 'function') {
+        MathJax.typesetPromise().catch((err) => console.log('MathJax error: ', err));
+      }
+    }
+
+    // Sync variables state on Tab 2 with perfect LaTeX rendering
+    function updateCalculators() {
+      const h_meter = height / 100.0;
+      const m_kg = mass / 1000.0;
+
+      // Sync Work Formula representation with MathJax LaTeX markup
+      const formulaWorkRes = document.getElementById('formula-work-res');
+      const exactWork = g * m_kg * h_meter;
+      if (formulaWorkRes) {
+        formulaWorkRes.innerHTML = `$W = 9.8 \\times ${m_kg.toFixed(1)}\\text{kg} \\times ${h_meter.toFixed(2)}\\text{m} = ${exactWork.toFixed(3)}\\text{ J}$`;
+      }
+
+      // Get current height's average speed from data records
+      let avgSpeed = 0;
+      const currentRecords = records[height];
+      const stateV = document.getElementById('calc-state-v');
+      const speedAlert = document.getElementById('calc-speed-alert');
+
+      if (currentRecords && currentRecords.length > 0) {
+        const sum = currentRecords.reduce((a, b) => a + b, 0);
+        avgSpeed = sum / currentRecords.length;
+        if (stateV) {
+          stateV.innerText = `${avgSpeed.toFixed(2)} m/s`;
+          stateV.className = "font-extrabold text-emerald-300";
+        }
+        if (speedAlert) speedAlert.classList.add('hidden');
+      } else {
+        if (stateV) {
+          stateV.innerText = `미기록`;
+          stateV.className = "font-extrabold text-rose-400 animate-pulse";
+        }
+        if (speedAlert) speedAlert.classList.remove('hidden');
+      }
+
+      // Sync Kinetic Energy Formula representation
+      const formulaKineticRes = document.getElementById('formula-kinetic-res');
+      if (formulaKineticRes) {
+        if (avgSpeed > 0) {
+          const exactKe = 0.5 * m_kg * avgSpeed * avgSpeed;
+          formulaKineticRes.innerHTML = `$E_k = \\frac{1}{2} \\times ${m_kg.toFixed(1)}\\text{kg} \\times (${avgSpeed.toFixed(2)}\\text{m/s})^2 = ${exactKe.toFixed(3)}\\text{ J}$`;
+        } else {
+          formulaKineticRes.innerHTML = `$\\text{낙하 속력 미계측}$`;
+        }
+      }
+
+      // Refresh MathJax rendering dynamically
+      triggerMathJax();
+
+      // Check validation criteria on change
+      evaluateCalculatorsAndShowGraph();
+    }
+
+    // Reset calculator inputs when parameters change
+    function resetCalculatorsUI() {
+      isWorkVerified = false;
+      isKeVerified = false;
+      
+      const inWork = document.getElementById('input-work');
+      const inKe = document.getElementById('input-ke');
+      const fbWork = document.getElementById('feedback-work');
+      const fbKe = document.getElementById('feedback-ke');
+      const gLock = document.getElementById('graph-lock-msg');
+      const gActive = document.getElementById('graph-active-container');
+
+      if (inWork) inWork.value = '';
+      if (inKe) inKe.value = '';
+      
+      if (fbWork) fbWork.className = 'hidden';
+      if (fbKe) fbKe.className = 'hidden';
+      
+      if (gLock) gLock.classList.remove('hidden');
+      if (gActive) gActive.classList.add('hidden');
+    }
+
+    // Pedagogical Calculator Verification logic
+    function verifyUserCalculation(type) {
+      const h_meter = height / 100.0;
+      const m_kg = mass / 1000.0;
+
+      if (type === 'work') {
+        const inWorkVal = document.getElementById('input-work') ? document.getElementById('input-work').value : '';
+        const inputWork = parseFloat(inWorkVal);
+        if (isNaN(inputWork)) {
+          showFeedback('feedback-work', false, '값을 숫자로 입력해 주세요.');
+          return;
+        }
+
+        const exactWork = g * m_kg * h_meter;
+        const diff = Math.abs(inputWork - exactWork);
+        if (diff <= 0.005 || diff / exactWork < 0.02) {
+          isWorkVerified = true;
+          showFeedback('feedback-work', true, `정답입니다!`);
+        } else {
+          isWorkVerified = false;
+          showFeedback('feedback-work', false, `다시 한번 계산해 보세요. 힌트: $9.8 \\times ${m_kg} \\times ${h_meter}$ 입니다.`);
+          triggerMathJax();
+        }
+      } else if (type === 'ke') {
+        const inKeVal = document.getElementById('input-ke') ? document.getElementById('input-ke').value : '';
+        const inputKe = parseFloat(inKeVal);
+        if (isNaN(inputKe)) {
+          showFeedback('feedback-ke', false, '값을 숫자로 입력해 주세요.');
+          return;
+        }
+
+        // Must have average speed first
+        let avgSpeed = 0;
+        const currentRecords = records[height];
+        if (!currentRecords || currentRecords.length === 0) {
+          showFeedback('feedback-ke', false, `먼저 데이터 표 탭에서 낙하 실험을 진행해 속력 데이터를 얻으세요!`);
+          return;
+        } else {
+          const sum = currentRecords.reduce((a, b) => a + b, 0);
+          avgSpeed = sum / currentRecords.length;
+        }
+
+        const exactKe = 0.5 * m_kg * avgSpeed * avgSpeed;
+        const diff = Math.abs(inputKe - exactKe);
+        if (diff <= 0.005 || diff / exactKe < 0.02) {
+          isKeVerified = true;
+          showFeedback('feedback-ke', true, `정답입니다!`);
+        } else {
+          isKeVerified = false;
+          showFeedback('feedback-ke', false, `다시 한번 계산해 보세요. 힌트: $0.5 \\times ${m_kg} \\times (${avgSpeed.toFixed(2)})^2$ 입니다.`);
+          triggerMathJax();
+        }
+      }
+
+      evaluateCalculatorsAndShowGraph();
+    }
+
+    // Evaluate feedback message classes safely
+    function showFeedback(elementId, isSuccess, text) {
+      const element = document.getElementById(elementId);
+      if (element) {
+        element.classList.remove('hidden');
+        element.innerText = text;
+        if (isSuccess) {
+          element.className = "text-[9px] font-bold leading-tight text-emerald-600 mt-1";
+        } else {
+          element.className = "text-[9px] font-bold leading-tight text-rose-600 mt-1";
+        }
+      }
+    }
+
+    // Toggle interactive graph once user gets both equations right!
+    function evaluateCalculatorsAndShowGraph() {
+      const graphLock = document.getElementById('graph-lock-msg');
+      const graphActive = document.getElementById('graph-active-container');
+
+      if (isWorkVerified && isKeVerified) {
+        if (graphLock) graphLock.classList.add('hidden');
+        if (graphActive) graphActive.classList.remove('hidden');
+
+        // Draw Graphs based on physical records
+        const h_meter = height / 100.0;
+        const m_kg = mass / 1000.0;
+        const work = g * m_kg * h_meter;
+        
+        let avgSpeed = 0;
+        const currentRecords = records[height];
+        if (currentRecords && currentRecords.length > 0) {
+          const sum = currentRecords.reduce((a, b) => a + b, 0);
+          avgSpeed = sum / currentRecords.length;
+        }
+        const ke = 0.5 * m_kg * avgSpeed * avgSpeed;
+
+        const chartWorkVal = document.getElementById('chart-work-val');
+        const chartKeVal = document.getElementById('chart-ke-val');
+        if (chartWorkVal) chartWorkVal.innerText = `${work.toFixed(3)} J`;
+        if (chartKeVal) chartKeVal.innerText = `${ke.toFixed(3)} J`;
+
+        const maxJ = 0.6; // Upper bound bar visual scale
+        const workPercent = Math.min(100, (work / maxJ) * 100);
+        const kePercent = Math.min(100, (ke / maxJ) * 100);
+
+        const workBar = document.getElementById('chart-work-bar');
+        const keBar = document.getElementById('chart-ke-bar');
+        if (workBar) workBar.style.width = `${workPercent}%`;
+        if (keBar) keBar.style.width = `${kePercent}%`;
+
+        // Ratio statement
+        const statBox = document.getElementById('equality-statement');
+        if (statBox) {
+          const ratio = ke / work;
+          const diffPercent = Math.abs(1 - ratio) * 100;
+
+          if (diffPercent < 1.5) {
+            statBox.className = "p-2.5 bg-emerald-50 text-emerald-800 rounded-lg border border-emerald-100 text-[10px] leading-relaxed font-medium";
+            statBox.innerHTML = `✅ <strong>일과 에너지가 거의 100% 보존됩니다!</strong> (편차: ${diffPercent.toFixed(2)}%) <br>중력이 해준 일의 크기만큼 추가적인 속력 상승과 운동에너지 전이가 일어남을 증명했습니다.`;
+          } else {
+            statBox.className = "p-2.5 bg-amber-50 text-amber-800 rounded-lg border border-amber-100 text-[10px] leading-relaxed font-medium";
+            statBox.innerHTML = `⚠️ <strong>현실 미세 마찰 발생!</strong> (공기 마찰 에너지 유실량: ${diffPercent.toFixed(2)}%) <br>이론적 에너지에 비해 미량이 유실되었으나 실제 역학 실험 오차 범주 내에 완벽하게 일치합니다.`;
+          }
+        }
+      }
+    }
+
+    // Check Cloze Blank filling test correctness
+    function checkCloze(qNum) {
+      if (qNum === 1) {
+        const b1 = document.getElementById('q1-blank1').value.trim();
+        const b2 = document.getElementById('q1-blank2').value.trim();
+        const b3 = document.getElementById('q1-blank3').value.trim();
+        const b4 = document.getElementById('q1-blank4').value.trim();
+        const feedback = document.getElementById('q1-cloze-feedback');
+
+        if (b1 === "일" && b2 === "운동" && b3 === "중력" && b4 === "운동") {
+          feedback.className = "mt-2 p-2.5 rounded-lg text-[10px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-100";
+          feedback.innerHTML = "🎉 <strong>참 잘했습니다! 모두 정답입니다.</strong><br>중력이 한 일($W$)이 모두 추의 운동 에너지($E_k$)로 전환되는 물리 법칙을 완벽히 파악했습니다.";
+        } else {
+          feedback.className = "mt-2 p-2.5 rounded-lg text-[10px] font-semibold bg-rose-50 text-rose-800 border border-rose-100";
+          feedback.innerHTML = "❌ <strong>일치하지 않는 빈칸이 있습니다. 다시 검토해 볼까요?</strong><br>힌트: 중력이 추에 한 [일]의 양... [운동] 에너지... [중력]이 물체에 한 일... 순서로 들어갑니다.";
+        }
+        feedback.classList.remove('hidden');
+      } else if (qNum === 2) {
+        const b1 = document.getElementById('q2-blank1').value.trim();
+        const b2 = document.getElementById('q2-blank2').value.trim();
+        const b3 = document.getElementById('q2-blank3').value.trim();
+        const feedback = document.getElementById('q2-cloze-feedback');
+
+        const isCorrect1 = ["2", "두", "2배", "두배", "이"].includes(b1);
+        const isCorrect2 = ["2", "두", "2배", "두배", "이"].includes(b2);
+        const isCorrect3 = ["2", "두", "2배", "두배", "이"].includes(b3);
+
+        if (isCorrect1 && isCorrect2 && isCorrect3) {
+          feedback.className = "mt-2 p-2.5 rounded-lg text-[10px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-100";
+          feedback.innerHTML = "🎉 <strong>참 잘했습니다! 모두 정답입니다.</strong><br>질량이 $2$배 증가하면 중력($mgh$)도 $2$배가 되므로 중력이 한 일도 $2$배, 추가 획득하는 운동 에너지($\\frac{1}{2}mv^2$)도 정확히 $2$배 증가하게 됩니다.";
+        } else {
+          feedback.className = "mt-2 p-2.5 rounded-lg text-[10px] font-semibold bg-rose-50 text-rose-800 border border-rose-100";
+          feedback.innerHTML = "❌ <strong>틀린 빈칸이 있습니다. 다시 한 번 연산해 보세요!</strong><br>힌트: 질량이 100g에서 200g으로 늘어났으니 모든 물리량은 [몇] 배로 비례해서 증가할지 생각해보세요.";
+        }
+        feedback.classList.remove('hidden');
+      }
+      triggerMathJax();
+    }
+
+    // Check skills on tab 3 (Real world lab prep check items)
+    function checkRealLabSkills() {
+      const chk1 = document.getElementById('chk-lab-1');
+      const chk2 = document.getElementById('chk-lab-2');
+      const chk3 = document.getElementById('chk-lab-3');
+      
+      const fillCheck1 = chk1 ? chk1.checked : false;
+      const fillCheck2 = chk2 ? chk2.checked : false;
+      const fillCheck3 = chk3 ? chk3.checked : false;
+      
+      const badge = document.getElementById('skills-badge');
+
+      if (badge) {
+        if (fillCheck1 && fillCheck2 && fillCheck3) {
+          badge.classList.remove('hidden');
+        } else {
+          badge.classList.add('hidden');
+        }
+      }
+    }
+
+    // Records management
+    function clearDataTable() {
+      records = { 10: [], 20: [], 30: [] };
+      const targets = [10, 20, 30];
+      
+      targets.forEach(h => {
+        for (let i = 1; i <= 5; i++) {
+          const cell = document.getElementById(`cell-${h}-${i}`);
+          if (cell) {
+            cell.innerText = "-";
+            cell.className = "py-1.5 px-1 border-r border-slate-200 text-slate-400";
+          }
+        }
+        const avgCell = document.getElementById(`cell-${h}-avg`);
+        if (avgCell) avgCell.innerText = "0.00";
+        
+        const calcCell = document.getElementById(`calc-ke-${h}`);
+        if (calcCell) {
+          calcCell.innerText = "데이터 미기록";
+          calcCell.className = "py-1.5 border-r border-slate-200 text-slate-400";
+        }
+      });
+
+      // Clear Cloze test inputs & feedbacks as well
+      for(let i=1; i<=4; i++) {
+        const el = document.getElementById(`q1-blank${i}`);
+        if(el) el.value = '';
+      }
+      for(let i=1; i<=3; i++) {
+        const el = document.getElementById(`q2-blank${i}`);
+        if(el) el.value = '';
+      }
+      const f1 = document.getElementById('q1-cloze-feedback');
+      const f2 = document.getElementById('q2-cloze-feedback');
+      if(f1) f1.classList.add('hidden');
+      if(f2) f2.classList.add('hidden');
+
+      // Clear Quizzes trackings
+      quiz1FirstChoice = null;
+      quiz1FirstCorrect = null;
+      quiz2FirstChoice = null;
+      quiz2FirstCorrect = null;
+      
+      for (let i = 1; i <= 5; i++) {
+        const o1 = document.getElementById(`q1-opt${i}`);
+        const o2 = document.getElementById(`q2-opt${i}`);
+        if (o1) o1.className = "py-1 px-1.5 rounded border border-slate-200 text-left text-[10px] font-medium";
+        if (o2) o2.className = "py-1 px-1.5 rounded border border-slate-200 text-left text-[10px] font-medium";
+      }
+      
+      const q1f = document.getElementById('q1-feedback');
+      const q2f = document.getElementById('q2-feedback');
+      if (q1f) q1f.classList.add('hidden');
+      if (q2f) q2f.classList.add('hidden');
+
+      resetCalculatorsUI();
+      updateCalculators();
+      showToast("데이터 테이블 및 정리 학습지가 정상 초기화되었습니다.");
+    }
+
+    // Reveal Sheet Answer hints
+    function revealWorksheetAnswer(qNum) {
+      const box = document.getElementById(`hint-box-${qNum}`);
+      if (box) {
+        if (box.classList.contains('hidden')) {
+          box.classList.remove('hidden');
+        } else {
+          box.classList.add('hidden');
+        }
+      }
+    }
+
+    // Tab Switch Logic
+    function switchTab(tabId) {
+      const tabs = ['data', 'analysis', 'questions'];
+      tabs.forEach(t => {
+        const btn = document.getElementById(`tab-${t}`);
+        const content = document.getElementById(`content-${t}`);
+        if (t === tabId) {
+          if (btn) btn.className = "flex-1 py-2.5 px-2 font-bold text-xs sm:text-sm border-b-2 text-indigo-600 border-indigo-600 bg-white transition-all";
+          if (content) content.classList.remove('hidden');
+        } else {
+          if (btn) btn.className = "flex-1 py-2.5 px-2 font-bold text-xs sm:text-sm border-b-2 text-slate-500 border-transparent hover:text-slate-700 hover:bg-slate-100 transition-all";
+          if (content) content.classList.add('hidden');
+        }
+      });
+      // Trigger dynamic sync on analytical tab open
+      if (tabId === 'analysis' || tabId === 'questions') {
+        updateCalculators();
+      }
+    }
+
+    // Quiz evaluation engine
+    function checkQuiz(quizNum, choiceSelected) {
+      if (quizNum === 1) {
+        // Track first attempt choice
+        if (quiz1FirstChoice === null) {
+          quiz1FirstChoice = choiceSelected;
+          quiz1FirstCorrect = (choiceSelected === 3);
+        }
+
+        const feedback = document.getElementById('q1-feedback');
+        if (!feedback) return;
+        feedback.classList.remove('hidden');
+        
+        for (let i = 1; i <= 5; i++) {
+          const opt = document.getElementById(`q1-opt${i}`);
+          if (opt) opt.className = "py-1 px-1.5 rounded border border-slate-200 text-left text-[10px] font-medium";
+        }
+
+        if (choiceSelected === 3) { // ③ ㄱ, ㄹ is correct
+          const correctOpt = document.getElementById('q1-opt3');
+          if (correctOpt) correctOpt.className = "py-1 px-1.5 rounded border-2 border-emerald-500 bg-emerald-50 text-emerald-800 text-left text-[10px] font-bold shadow-sm";
+          feedback.className = "text-[10px] mt-1.5 p-2.5 rounded-lg font-medium bg-emerald-50 text-emerald-800 border border-emerald-100";
+          feedback.innerHTML = "🎉 <strong>정답입니다!</strong><br>식($E_k = \\frac{1}{2}mv^2$)에 따라, 질량에 정비례(ㄱ)하고 속력의 <strong>제곱에 비례(ㄹ)</strong>하는 관계입니다. 가로축이 속력의 제곱($v^2$)이므로, 가로축과의 관계 그래프는 곡선이 아니라 <strong>직선(ㄹ)</strong> 형태로 곧게 뻗어 나가야 옳습니다.";
+        } else {
+          const wrongOpt = document.getElementById(`q1-opt${choiceSelected}`);
+          if (wrongOpt) wrongOpt.className = "py-1 px-1.5 rounded border-2 border-rose-500 bg-rose-50 text-rose-800 text-left text-[10px] font-bold";
+          feedback.className = "text-[10px] mt-1.5 p-2.5 rounded-lg font-medium bg-rose-50 text-rose-800 border border-rose-100";
+          feedback.innerHTML = "❌ <strong>틀렸습니다! 다시 검토해 보세요.</strong><br>가로축이 단순 속력($v$)일 때는 아래로 볼록한 2차 곡선(ㄷ 모양)이 맞지만, 가로축이 속력의 제곱인 <strong>(속력)²</strong>으로 표기되어 있으므로 <strong>비례 관계인 직선(ㄹ)</strong> 그래프가 정답입니다.";
+        }
+      } else if (quizNum === 2) {
+        // Track first attempt choice
+        if (quiz2FirstChoice === null) {
+          quiz2FirstChoice = choiceSelected;
+          quiz2FirstCorrect = (choiceSelected === 4);
+        }
+
+        const feedback = document.getElementById('q2-feedback');
+        if (!feedback) return;
+        feedback.classList.remove('hidden');
+
+        for (let i = 1; i <= 5; i++) {
+          const opt = document.getElementById(`q2-opt${i}`);
+          if (opt) opt.className = "py-1 px-1.5 rounded border border-slate-200 text-left text-[10px] font-medium";
+        }
+
+        if (choiceSelected === 4) { // ④ D is correct
+          const correctOpt = document.getElementById('q2-opt4');
+          if (correctOpt) correctOpt.className = "py-1 px-1.5 rounded border-2 border-emerald-500 bg-emerald-50 text-emerald-800 text-left text-[10px] font-bold shadow-sm";
+          feedback.className = "text-[10px] mt-1.5 p-2.5 rounded-lg font-medium bg-emerald-50 text-emerald-800 border border-emerald-100";
+          feedback.innerHTML = "🎉 <strong>정답입니다!</strong><br>중력이 한 일이 운동 에너지로 전환되므로 추가 낙하한 거리가 길어질수록 중력이 한 일의 양이 많아져 운동 에너지도 커집니다. 따라서 낙하 거리가 가장 긴 D에서 가장 큰 값이 측정됩니다.";
+        } else {
+          const wrongOpt = document.getElementById(`q2-opt${choiceSelected}`);
+          if (wrongOpt) wrongOpt.className = "py-1 px-1.5 rounded border-2 border-rose-500 bg-rose-50 text-rose-800 text-left text-[10px] font-bold";
+          feedback.className = "text-[10px] mt-1.5 p-2.5 rounded-lg font-medium bg-rose-50 text-rose-800 border border-rose-100";
+          feedback.innerHTML = "❌ <strong>틀렸습니다! 다시 한 번 선택해 보세요.</strong><br>낙하 거리가 길어질수록 중력이 일을 더 많이 해준 상태가 되므로, 낙하 종단 지점인 D에서 운동 에너지와 속력이 가장 큽니다.";
+        }
+      }
+      triggerMathJax();
+    }
+
+    // Custom Toast Alert
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      if (toast) {
+        toast.innerText = msg;
+        toast.style.opacity = "1";
+        setTimeout(() => {
+          toast.style.opacity = "0";
+        }, 3000);
+      }
+    }
+
+    // REPORT EXPORTING FUNCTIONS (html2canvas Bridge)
+    function openReportModal() {
+      // Check data completion status in modal display
+      const hasData = records[10].length > 0 || records[20].length > 0 || records[30].length > 0;
+      document.getElementById('r-status-data').innerText = hasData ? "기록 데이터 있음" : "데이터 없음";
+      document.getElementById('r-status-data').className = hasData ? "font-bold text-emerald-600" : "font-bold text-rose-500 animate-pulse";
+
+      document.getElementById('r-status-calc').innerText = (isWorkVerified && isKeVerified) ? "수식계산 정답 검증됨" : "계산 미검증";
+      document.getElementById('r-status-calc').className = (isWorkVerified && isKeVerified) ? "font-bold text-emerald-600" : "font-bold text-rose-500 animate-pulse";
+
+      const chkCount = (document.getElementById('chk-lab-1').checked ? 1 : 0) + 
+                         (document.getElementById('chk-lab-2').checked ? 1 : 0) + 
+                         (document.getElementById('chk-lab-3').checked ? 1 : 0);
+      document.getElementById('r-status-check').innerText = `${chkCount}/3개 완료`;
+      document.getElementById('r-status-check').className = chkCount === 3 ? "font-bold text-emerald-600" : "font-bold text-orange-500";
+
+      document.getElementById('report-modal').classList.remove('hidden');
+    }
+
+    function closeReportModal() {
+      document.getElementById('report-modal').classList.add('hidden');
+    }
+
+    // Generate offscreen printable container and capture as PNG
+    function generateReportAndDownload() {
+      const gradeClass = document.getElementById('report-grade-class').value.trim() || '과학실 3학년';
+      const studentNum = document.getElementById('report-num').value.trim() || '미기입 번호';
+      const studentName = document.getElementById('report-student-name').value.trim() || '무명 학생';
+      const groupName = document.getElementById('report-group').value.trim() || '개인 학습';
+
+      // Show loader
+      document.getElementById('report-modal').classList.add('hidden');
+      document.getElementById('loading-overlay').classList.remove('hidden');
+
+      // 1. Sync metadata to printed elements
+      document.getElementById('p-grade-class').innerText = gradeClass;
+      document.getElementById('p-num').innerText = studentNum;
+      document.getElementById('p-student-name').innerText = studentName;
+      document.getElementById('p-group').innerText = groupName;
+      document.getElementById('p-date').innerText = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+
+      // 2. Sync dynamic table values (Mirrors exactly the primary visual table structure for 5 sequential trials + averages)
+      const pTableBody = document.getElementById('p-table-body');
+      pTableBody.innerHTML = '';
+      
+      let tableHtml = "";
+      for (let trial = 1; trial <= 5; trial++) {
+        const val10 = records[10][trial - 1] ? `${records[10][trial - 1].toFixed(2)} m/s` : "-";
+        const val20 = records[20][trial - 1] ? `${records[20][trial - 1].toFixed(2)} m/s` : "-";
+        const val30 = records[30][trial - 1] ? `${records[30][trial - 1].toFixed(2)} m/s` : "-";
+        tableHtml += `
+          <tr>
+            <td class="border border-slate-300 py-1 bg-slate-50/50 font-bold">${trial}회 속력</td>
+            <td class="border border-slate-300 py-1 font-medium text-slate-800">${val10}</td>
+            <td class="border border-slate-300 py-1 font-medium text-slate-800">${val20}</td>
+            <td class="border border-slate-300 py-1 font-medium text-slate-800">${val30}</td>
+          </tr>
+        `;
+      }
+      
+      // Calculate real averages to display in printable layout
+      const avg10 = records[10].length > 0 ? (records[10].reduce((a,b)=>a+b,0)/records[10].length).toFixed(2) + " m/s" : "0.00 m/s";
+      const avg20 = records[20].length > 0 ? (records[20].reduce((a,b)=>a+b,0)/records[20].length).toFixed(2) + " m/s" : "0.00 m/s";
+      const avg30 = records[30].length > 0 ? (records[30].reduce((a,b)=>a+b,0)/records[30].length).toFixed(2) + " m/s" : "0.00 m/s";
+      
+      tableHtml += `
+        <tr class="bg-indigo-50/30 font-bold text-indigo-950">
+          <td class="border border-slate-300 py-1.5 bg-slate-100">평균 속력</td>
+          <td class="border border-slate-300 py-1.5 text-indigo-700">${avg10}</td>
+          <td class="border border-slate-300 py-1.5 text-indigo-700">${avg20}</td>
+          <td class="border border-slate-300 py-1.5 text-indigo-700">${avg30}</td>
+        </tr>
+      `;
+      pTableBody.innerHTML = tableHtml;
+
+      // 3. Sync Work Done & Kinetic energy values (Safely formatted as pure non-LaTeX unicode text to prevent canvas image bugs)
+      const h_meter = height / 100.0;
+      const m_kg = mass / 1000.0;
+      const exactWork = g * m_kg * h_meter;
+      document.getElementById('p-calc-work').innerText = `${exactWork.toFixed(3)} J (계산 완료)`;
+
+      let avgSpeed = 0;
+      const currentRecords = records[height];
+      if (currentRecords && currentRecords.length > 0) {
+        const sum = currentRecords.reduce((a, b) => a + b, 0);
+        avgSpeed = sum / currentRecords.length;
+      }
+      const exactKe = 0.5 * m_kg * avgSpeed * avgSpeed;
+      document.getElementById('p-calc-ke').innerText = `${exactKe.toFixed(3)} J (계산 완료)`;
+
+      // 4. Sync checklists status
+      document.getElementById('p-chk-1').innerText = document.getElementById('chk-lab-1').checked ? '수행함' : '미수행';
+      document.getElementById('p-chk-1').className = document.getElementById('chk-lab-1').checked ? 'font-bold text-emerald-600' : 'font-bold text-rose-500';
+
+      document.getElementById('p-chk-2').innerText = document.getElementById('chk-lab-2').checked ? '수행함' : '미수행';
+      document.getElementById('p-chk-2').className = document.getElementById('chk-lab-2').checked ? 'font-bold text-emerald-600' : 'font-bold text-rose-500';
+
+      document.getElementById('p-chk-3').innerText = document.getElementById('chk-lab-3').checked ? '수행함' : '미수행';
+      document.getElementById('p-chk-3').className = document.getElementById('chk-lab-3').checked ? 'font-bold text-emerald-600' : 'font-bold text-rose-500';
+
+      // 5. Sync Cloze Worksheet text inputs
+      const q1b1 = document.getElementById('q1-blank1').value.trim() || '__';
+      const q1b2 = document.getElementById('q1-blank2').value.trim() || '__';
+      const q1b3 = document.getElementById('q1-blank3').value.trim() || '__';
+      const q1b4 = document.getElementById('q1-blank4').value.trim() || '__';
+      document.getElementById('p-cloze-1').innerText = `제출: 중력이 추에 한 [ ${q1b1} ]의 양과 추의 [ ${q1b2} ] 에너지는 거의 일치하며, 자유 낙하할 때 [ ${q1b3} ]이 물체에 한 일이 모두 물체의 [ ${q1b4} ] 에너지로 변환된다.`;
+
+      const q2b1 = document.getElementById('q2-blank1').value.trim() || '__';
+      const q2b2 = document.getElementById('q2-blank2').value.trim() || '__';
+      const q2b3 = document.getElementById('q2-blank3').value.trim() || '__';
+      document.getElementById('p-cloze-2').innerText = `제출: 질량이 200g이 되면 중력이 [ ${q2b1} ]배가 되어 중력이 한 일도 [ ${q2b2} ]배, 운동 에너지 또한 [ ${q2b3} ]배가 된다.`;
+
+      // 6. Sync Quizzes tracker results (Question text + What choice they chose first + Result)
+      // Removed "(정답)" texts from values to keep students from seeing correct answers via screenshot check bypass
+      const q1OptionsText = {
+        1: "① ㄱ",
+        2: "② ㄱ, ㄷ",
+        3: "③ ㄱ, ㄹ",
+        4: "④ ㄴ, ㄷ",
+        5: "⑤ ㄴ, ㄹ"
+      };
+      const q2OptionsText = {
+        1: "① A",
+        2: "② B",
+        3: "③ C",
+        4: "④ D",
+        5: "⑤ 모두 동일"
+      };
+
+      const pQ1Status = document.getElementById('p-quiz1-status');
+      const pQ1Choice = document.getElementById('p-quiz1-choice');
+      if (quiz1FirstChoice !== null) {
+        pQ1Choice.innerText = q1OptionsText[quiz1FirstChoice];
+        if (quiz1FirstCorrect) {
+          pQ1Status.innerText = "맞음";
+          pQ1Status.className = "px-2 py-0.5 rounded text-[10px] font-black bg-emerald-100 text-emerald-800 border border-emerald-200";
+        } else {
+          pQ1Status.innerText = "틀림";
+          pQ1Status.className = "px-2 py-0.5 rounded text-[10px] font-black bg-rose-100 text-rose-800 border border-rose-200";
+        }
+      } else {
+        pQ1Choice.innerText = "미응답 (실험실에서 풀지 않음)";
+        pQ1Status.innerText = "미수행";
+        pQ1Status.className = "px-2 py-0.5 rounded text-[10px] font-black bg-slate-100 text-slate-500 border border-slate-200";
+      }
+
+      const pQ2Status = document.getElementById('p-quiz2-status');
+      const pQ2Choice = document.getElementById('p-quiz2-choice');
+      if (quiz2FirstChoice !== null) {
+        pQ2Choice.innerText = q2OptionsText[quiz2FirstChoice];
+        if (quiz2FirstCorrect) {
+          pQ2Status.innerText = "맞음";
+          pQ2Status.className = "px-2 py-0.5 rounded text-[10px] font-black bg-emerald-100 text-emerald-800 border border-emerald-200";
+        } else {
+          pQ2Status.innerText = "틀림";
+          pQ2Status.className = "px-2 py-0.5 rounded text-[10px] font-black bg-rose-100 text-rose-800 border border-rose-200";
+        }
+      } else {
+        pQ2Choice.innerText = "미응답 (실험실에서 풀지 않음)";
+        pQ2Status.innerText = "미수행";
+        pQ2Status.className = "px-2 py-0.5 rounded text-[10px] font-black bg-slate-100 text-slate-500 border border-slate-200";
+      }
+
+      // Render capturing immediately without MathJax delay since report is purely formatted text now
+      setTimeout(() => {
+        proceedToCanvasCapture(studentName);
+      }, 300);
+    }
+
+    function proceedToCanvasCapture(studentName) {
+      const element = document.getElementById('printable-report');
+      
+      // Use html2canvas to render the invisible report div perfectly
+      html2canvas(element, {
+        scale: 2, // High resolution (double density)
+        useCORS: true,
+        backgroundColor: '#ffffff',
+        logging: false
+      }).then(canvas => {
+        const image = canvas.toDataURL("image/png");
+        
+        // Custom download link
+        const link = document.createElement('a');
+        link.download = `중력과_운동에너지_실험보고서_${studentName}.png`;
+        link.href = image;
+        link.click();
+
+        // Close loaders
+        document.getElementById('loading-overlay').classList.add('hidden');
+        showToast("🎉 탐구 실험 보고서 고해상도 이미지 다운로드가 완료되었습니다!");
+      }).catch(err => {
+        document.getElementById('loading-overlay').classList.add('hidden');
+        showToast("⚠️ 이미지 생성 도중 오류가 발생했습니다. 다시 시도해 주세요.");
+        console.error("Capture Error: ", err);
+      });
+    }
+
+    // Initialize simulation positions on load
+    window.onload = function() {
+      initElements();
+      updateWeightPosition();
+    };
+  </script>
+</body>
+</html>

@@ -350,14 +350,9 @@
 
         <!-- Tab 2: Energy Analysis -->
         <div id="content-analysis" class="p-4 hidden flex flex-col gap-4 flex-grow overflow-y-auto max-h-[480px]">
-          <div class="flex items-start justify-between gap-2">
-            <div>
-              <h3 class="text-sm font-black text-slate-800">에너지 직접 손으로 계산하고 검증하기</h3>
-              <p class="text-[10px] text-slate-500">직접 수식을 활용해 빈칸을 계산한 후 입력해 보세요. 올바르게 계산했는지 즉시 평가됩니다.</p>
-            </div>
-            <button onclick="openCalculator()" class="shrink-0 flex items-center gap-1 bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs py-1.5 px-3 rounded-lg shadow-sm transition-colors">
-              🧮 계산기
-            </button>
+          <div>
+            <h3 class="text-sm font-black text-slate-800">에너지 직접 손으로 계산하고 검증하기</h3>
+            <p class="text-[10px] text-slate-500">직접 수식을 활용해 빈칸을 계산한 후 입력해 보세요. 올바르게 계산했는지 즉시 평가됩니다.</p>
           </div>
 
           <!-- Dynamic variables display banner -->
@@ -387,26 +382,36 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             
             <!-- Work Calculation Field -->
-            <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl flex flex-col gap-2">
+            <div id="calc-anchor-work" class="relative p-3 bg-slate-50 border border-slate-200 rounded-xl flex flex-col gap-2">
               <div>
                 <span class="text-[10px] font-black text-indigo-700 block">① 중력이 추에 한 일의 양 ($W$)</span>
                 <span class="text-[9px] text-slate-500">$W = 9.8 \times m(\text{kg} ) \times h(\text{m} )$</span>
               </div>
               <div class="flex gap-1.5 items-center mt-1">
-                <input type="number" id="input-work" step="0.001" placeholder="직접 계산한 J 입력" class="flex-grow text-xs p-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
+                <div class="relative flex-grow">
+                  <input type="number" id="input-work" step="0.001" placeholder="직접 계산한 J 입력" class="w-full text-xs p-2 pr-9 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
+                  <button type="button" onclick="toggleCalculator('work')" title="계산기 열기" aria-label="계산기 열기" class="calc-toggle absolute right-1.5 top-1/2 -translate-y-1/2 p-1 rounded-md text-base leading-none hover:bg-indigo-50 transition-colors">
+                    🧮
+                  </button>
+                </div>
                 <button onclick="verifyUserCalculation('work')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs py-2 px-3 rounded-lg shadow-sm shrink-0">확인</button>
               </div>
               <p id="feedback-work" class="text-[9px] font-bold leading-tight"></p>
             </div>
 
             <!-- Kinetic Energy Calculation Field -->
-            <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl flex flex-col gap-2">
+            <div id="calc-anchor-ke" class="relative p-3 bg-slate-50 border border-slate-200 rounded-xl flex flex-col gap-2">
               <div>
                 <span class="text-[10px] font-black text-amber-700 block">② 낙하 직후 추의 운동 에너지 ($E_k$)</span>
                 <span class="text-[9px] text-slate-500">$E_k = \frac{1}{2} \times m(\text{kg} ) \times v(\text{m/s} )^2$</span>
               </div>
               <div class="flex gap-1.5 items-center mt-1">
-                <input type="number" id="input-ke" step="0.001" placeholder="직접 계산한 J 입력" class="flex-grow text-xs p-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white">
+                <div class="relative flex-grow">
+                  <input type="number" id="input-ke" step="0.001" placeholder="직접 계산한 J 입력" class="w-full text-xs p-2 pr-9 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white">
+                  <button type="button" onclick="toggleCalculator('ke')" title="계산기 열기" aria-label="계산기 열기" class="calc-toggle absolute right-1.5 top-1/2 -translate-y-1/2 p-1 rounded-md text-base leading-none hover:bg-amber-50 transition-colors">
+                    🧮
+                  </button>
+                </div>
                 <button onclick="verifyUserCalculation('ke')" class="bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs py-2 px-3 rounded-lg shadow-sm shrink-0">확인</button>
               </div>
               <p id="feedback-ke" class="text-[9px] font-bold leading-tight"></p>
@@ -721,39 +726,39 @@
 
   </main>
 
-  <!-- Calculator Popup -->
-  <div id="calc-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 hidden" onclick="if (event.target === this) closeCalculator()">
-    <div class="bg-slate-800 w-full max-w-xs rounded-2xl shadow-2xl p-4 select-none">
-      <div class="flex justify-between items-center mb-3">
+  <!-- Calculator Popover (attached under the answer card whose icon was clicked) -->
+  <div id="calc-popover" class="absolute left-0 right-0 top-full mt-2 z-40 hidden">
+    <div class="bg-slate-800 w-full max-w-xs mx-auto rounded-2xl shadow-2xl p-3 select-none">
+      <div class="flex justify-between items-center mb-2">
         <span class="text-white font-black text-sm">🧮 계산기</span>
         <button onclick="closeCalculator()" class="text-slate-400 hover:text-white text-lg leading-none px-1" aria-label="닫기">✕</button>
       </div>
-      <div class="bg-slate-900 rounded-xl p-3 mb-3 text-right">
+      <div class="bg-slate-900 rounded-xl p-2.5 mb-2 text-right">
         <div id="calc-expr" class="text-slate-400 text-xs min-h-[1rem] break-all"></div>
-        <div id="calc-display" class="text-white text-2xl font-bold break-all">0</div>
+        <div id="calc-display" class="text-white text-xl font-bold break-all">0</div>
       </div>
-      <div class="grid grid-cols-4 gap-2 text-sm font-bold">
-        <button onclick="calcPress('C')" class="py-3 rounded-xl bg-rose-500 hover:bg-rose-600 text-white">C</button>
-        <button onclick="calcPress('(')" class="py-3 rounded-xl bg-slate-600 hover:bg-slate-500 text-white">(</button>
-        <button onclick="calcPress(')')" class="py-3 rounded-xl bg-slate-600 hover:bg-slate-500 text-white">)</button>
-        <button onclick="calcPress('back')" class="py-3 rounded-xl bg-slate-600 hover:bg-slate-500 text-white" aria-label="지우기">⌫</button>
-        <button onclick="calcPress('7')" class="py-3 rounded-xl bg-slate-700 hover:bg-slate-600 text-white">7</button>
-        <button onclick="calcPress('8')" class="py-3 rounded-xl bg-slate-700 hover:bg-slate-600 text-white">8</button>
-        <button onclick="calcPress('9')" class="py-3 rounded-xl bg-slate-700 hover:bg-slate-600 text-white">9</button>
-        <button onclick="calcPress('÷')" class="py-3 rounded-xl bg-indigo-500 hover:bg-indigo-600 text-white">÷</button>
-        <button onclick="calcPress('4')" class="py-3 rounded-xl bg-slate-700 hover:bg-slate-600 text-white">4</button>
-        <button onclick="calcPress('5')" class="py-3 rounded-xl bg-slate-700 hover:bg-slate-600 text-white">5</button>
-        <button onclick="calcPress('6')" class="py-3 rounded-xl bg-slate-700 hover:bg-slate-600 text-white">6</button>
-        <button onclick="calcPress('×')" class="py-3 rounded-xl bg-indigo-500 hover:bg-indigo-600 text-white">×</button>
-        <button onclick="calcPress('1')" class="py-3 rounded-xl bg-slate-700 hover:bg-slate-600 text-white">1</button>
-        <button onclick="calcPress('2')" class="py-3 rounded-xl bg-slate-700 hover:bg-slate-600 text-white">2</button>
-        <button onclick="calcPress('3')" class="py-3 rounded-xl bg-slate-700 hover:bg-slate-600 text-white">3</button>
-        <button onclick="calcPress('−')" class="py-3 rounded-xl bg-indigo-500 hover:bg-indigo-600 text-white">−</button>
-        <button onclick="calcPress('0')" class="py-3 rounded-xl bg-slate-700 hover:bg-slate-600 text-white">0</button>
-        <button onclick="calcPress('.')" class="py-3 rounded-xl bg-slate-700 hover:bg-slate-600 text-white">.</button>
-        <button onclick="calcPress('²')" class="py-3 rounded-xl bg-slate-600 hover:bg-slate-500 text-white">x²</button>
-        <button onclick="calcPress('+')" class="py-3 rounded-xl bg-indigo-500 hover:bg-indigo-600 text-white">+</button>
-        <button onclick="calcPress('=')" class="col-span-4 py-3 rounded-xl bg-yellow-400 hover:bg-yellow-500 text-slate-950 font-black">=</button>
+      <div class="grid grid-cols-4 gap-1.5 text-sm font-bold">
+        <button onclick="calcPress('C')" class="py-2 rounded-lg bg-rose-500 hover:bg-rose-600 text-white">C</button>
+        <button onclick="calcPress('(')" class="py-2 rounded-lg bg-slate-600 hover:bg-slate-500 text-white">(</button>
+        <button onclick="calcPress(')')" class="py-2 rounded-lg bg-slate-600 hover:bg-slate-500 text-white">)</button>
+        <button onclick="calcPress('back')" class="py-2 rounded-lg bg-slate-600 hover:bg-slate-500 text-white" aria-label="지우기">⌫</button>
+        <button onclick="calcPress('7')" class="py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-white">7</button>
+        <button onclick="calcPress('8')" class="py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-white">8</button>
+        <button onclick="calcPress('9')" class="py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-white">9</button>
+        <button onclick="calcPress('÷')" class="py-2 rounded-lg bg-indigo-500 hover:bg-indigo-600 text-white">÷</button>
+        <button onclick="calcPress('4')" class="py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-white">4</button>
+        <button onclick="calcPress('5')" class="py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-white">5</button>
+        <button onclick="calcPress('6')" class="py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-white">6</button>
+        <button onclick="calcPress('×')" class="py-2 rounded-lg bg-indigo-500 hover:bg-indigo-600 text-white">×</button>
+        <button onclick="calcPress('1')" class="py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-white">1</button>
+        <button onclick="calcPress('2')" class="py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-white">2</button>
+        <button onclick="calcPress('3')" class="py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-white">3</button>
+        <button onclick="calcPress('−')" class="py-2 rounded-lg bg-indigo-500 hover:bg-indigo-600 text-white">−</button>
+        <button onclick="calcPress('0')" class="py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-white">0</button>
+        <button onclick="calcPress('.')" class="py-2 rounded-lg bg-slate-700 hover:bg-slate-600 text-white">.</button>
+        <button onclick="calcPress('²')" class="py-2 rounded-lg bg-slate-600 hover:bg-slate-500 text-white">x²</button>
+        <button onclick="calcPress('+')" class="py-2 rounded-lg bg-indigo-500 hover:bg-indigo-600 text-white">+</button>
+        <button onclick="calcPress('=')" class="col-span-4 py-2 rounded-lg bg-yellow-400 hover:bg-yellow-500 text-slate-950 font-black">=</button>
       </div>
     </div>
   </div>
@@ -1612,13 +1617,23 @@
     // POPUP CALCULATOR (button-driven, evaluated with a small parser instead of eval)
     let calcExpr = '';
     let calcJustEvaluated = false;
+    let calcOpenFor = null;
 
-    function openCalculator() {
-      document.getElementById('calc-modal').classList.remove('hidden');
+    // Show the calculator right under the answer card whose icon was clicked; clicking the same icon again closes it
+    function toggleCalculator(kind) {
+      const popover = document.getElementById('calc-popover');
+      if (calcOpenFor === kind) {
+        closeCalculator();
+        return;
+      }
+      document.getElementById('calc-anchor-' + kind).appendChild(popover);
+      popover.classList.remove('hidden');
+      calcOpenFor = kind;
     }
 
     function closeCalculator() {
-      document.getElementById('calc-modal').classList.add('hidden');
+      document.getElementById('calc-popover').classList.add('hidden');
+      calcOpenFor = null;
     }
 
     function evaluateCalcExpression(expr) {
@@ -1699,11 +1714,20 @@
       }
     }
 
+    document.addEventListener('click', (e) => {
+      if (calcOpenFor === null) return;
+      // Clicks inside the card that owns the calculator (its input, icon or the calculator itself) keep it open
+      if (e.target.closest('#calc-anchor-' + calcOpenFor) || e.target.closest('.calc-toggle')) return;
+      closeCalculator();
+    });
+
     document.addEventListener('keydown', (e) => {
-      if (document.getElementById('calc-modal').classList.contains('hidden')) return;
-      const keyMap = { '*': '×', '/': '÷', '-': '−', 'Enter': '=', 'Backspace': 'back', 'Escape': 'esc', 'Delete': 'C', '^': '²' };
+      if (document.getElementById('calc-popover').classList.contains('hidden')) return;
+      if (e.key === 'Escape') { closeCalculator(); return; }
+      // Let students type freely in the answer inputs while the calculator is open
+      if (e.target.tagName === 'INPUT') return;
+      const keyMap = { '*': '×', '/': '÷', '-': '−', 'Enter': '=', 'Backspace': 'back', 'Delete': 'C', '^': '²' };
       const key = keyMap[e.key] || e.key;
-      if (key === 'esc') { closeCalculator(); return; }
       if (/^[\d.+()]$/.test(key) || ['×', '÷', '−', '=', 'back', 'C', '²'].includes(key)) {
         e.preventDefault();
         calcPress(key);

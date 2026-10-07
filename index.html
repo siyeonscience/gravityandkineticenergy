@@ -350,9 +350,14 @@
 
         <!-- Tab 2: Energy Analysis -->
         <div id="content-analysis" class="p-4 hidden flex flex-col gap-4 flex-grow overflow-y-auto max-h-[480px]">
-          <div>
-            <h3 class="text-sm font-black text-slate-800">에너지 직접 손으로 계산하고 검증하기</h3>
-            <p class="text-[10px] text-slate-500">직접 수식을 활용해 빈칸을 계산한 후 입력해 보세요. 올바르게 계산했는지 즉시 평가됩니다.</p>
+          <div class="flex items-start justify-between gap-2">
+            <div>
+              <h3 class="text-sm font-black text-slate-800">에너지 직접 손으로 계산하고 검증하기</h3>
+              <p class="text-[10px] text-slate-500">직접 수식을 활용해 빈칸을 계산한 후 입력해 보세요. 올바르게 계산했는지 즉시 평가됩니다.</p>
+            </div>
+            <button onclick="openCalculator()" class="shrink-0 flex items-center gap-1 bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs py-1.5 px-3 rounded-lg shadow-sm transition-colors">
+              🧮 계산기
+            </button>
           </div>
 
           <!-- Dynamic variables display banner -->
@@ -715,6 +720,43 @@
     </section>
 
   </main>
+
+  <!-- Calculator Popup -->
+  <div id="calc-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 hidden" onclick="if (event.target === this) closeCalculator()">
+    <div class="bg-slate-800 w-full max-w-xs rounded-2xl shadow-2xl p-4 select-none">
+      <div class="flex justify-between items-center mb-3">
+        <span class="text-white font-black text-sm">🧮 계산기</span>
+        <button onclick="closeCalculator()" class="text-slate-400 hover:text-white text-lg leading-none px-1" aria-label="닫기">✕</button>
+      </div>
+      <div class="bg-slate-900 rounded-xl p-3 mb-3 text-right">
+        <div id="calc-expr" class="text-slate-400 text-xs min-h-[1rem] break-all"></div>
+        <div id="calc-display" class="text-white text-2xl font-bold break-all">0</div>
+      </div>
+      <div class="grid grid-cols-4 gap-2 text-sm font-bold">
+        <button onclick="calcPress('C')" class="py-3 rounded-xl bg-rose-500 hover:bg-rose-600 text-white">C</button>
+        <button onclick="calcPress('(')" class="py-3 rounded-xl bg-slate-600 hover:bg-slate-500 text-white">(</button>
+        <button onclick="calcPress(')')" class="py-3 rounded-xl bg-slate-600 hover:bg-slate-500 text-white">)</button>
+        <button onclick="calcPress('back')" class="py-3 rounded-xl bg-slate-600 hover:bg-slate-500 text-white" aria-label="지우기">⌫</button>
+        <button onclick="calcPress('7')" class="py-3 rounded-xl bg-slate-700 hover:bg-slate-600 text-white">7</button>
+        <button onclick="calcPress('8')" class="py-3 rounded-xl bg-slate-700 hover:bg-slate-600 text-white">8</button>
+        <button onclick="calcPress('9')" class="py-3 rounded-xl bg-slate-700 hover:bg-slate-600 text-white">9</button>
+        <button onclick="calcPress('÷')" class="py-3 rounded-xl bg-indigo-500 hover:bg-indigo-600 text-white">÷</button>
+        <button onclick="calcPress('4')" class="py-3 rounded-xl bg-slate-700 hover:bg-slate-600 text-white">4</button>
+        <button onclick="calcPress('5')" class="py-3 rounded-xl bg-slate-700 hover:bg-slate-600 text-white">5</button>
+        <button onclick="calcPress('6')" class="py-3 rounded-xl bg-slate-700 hover:bg-slate-600 text-white">6</button>
+        <button onclick="calcPress('×')" class="py-3 rounded-xl bg-indigo-500 hover:bg-indigo-600 text-white">×</button>
+        <button onclick="calcPress('1')" class="py-3 rounded-xl bg-slate-700 hover:bg-slate-600 text-white">1</button>
+        <button onclick="calcPress('2')" class="py-3 rounded-xl bg-slate-700 hover:bg-slate-600 text-white">2</button>
+        <button onclick="calcPress('3')" class="py-3 rounded-xl bg-slate-700 hover:bg-slate-600 text-white">3</button>
+        <button onclick="calcPress('−')" class="py-3 rounded-xl bg-indigo-500 hover:bg-indigo-600 text-white">−</button>
+        <button onclick="calcPress('0')" class="py-3 rounded-xl bg-slate-700 hover:bg-slate-600 text-white">0</button>
+        <button onclick="calcPress('.')" class="py-3 rounded-xl bg-slate-700 hover:bg-slate-600 text-white">.</button>
+        <button onclick="calcPress('²')" class="py-3 rounded-xl bg-slate-600 hover:bg-slate-500 text-white">x²</button>
+        <button onclick="calcPress('+')" class="py-3 rounded-xl bg-indigo-500 hover:bg-indigo-600 text-white">+</button>
+        <button onclick="calcPress('=')" class="col-span-4 py-3 rounded-xl bg-yellow-400 hover:bg-yellow-500 text-slate-950 font-black">=</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Loading Overlay for Image processing -->
   <div id="loading-overlay" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-[200] flex flex-col items-center justify-center hidden">
@@ -1566,6 +1608,107 @@
         }, 3000);
       }
     }
+
+    // POPUP CALCULATOR (button-driven, evaluated with a small parser instead of eval)
+    let calcExpr = '';
+    let calcJustEvaluated = false;
+
+    function openCalculator() {
+      document.getElementById('calc-modal').classList.remove('hidden');
+    }
+
+    function closeCalculator() {
+      document.getElementById('calc-modal').classList.add('hidden');
+    }
+
+    function evaluateCalcExpression(expr) {
+      const tokens = expr.match(/\d*\.?\d+|\d+\.|[+−×÷()²]/g) || [];
+      if (tokens.join('') !== expr) throw new Error('bad token');
+      let pos = 0;
+      const peek = () => tokens[pos];
+      const next = () => tokens[pos++];
+
+      function parseExpr() {
+        let value = parseTerm();
+        while (peek() === '+' || peek() === '−') {
+          value = next() === '+' ? value + parseTerm() : value - parseTerm();
+        }
+        return value;
+      }
+      function parseTerm() {
+        let value = parseFactor();
+        while (peek() === '×' || peek() === '÷') {
+          value = next() === '×' ? value * parseFactor() : value / parseFactor();
+        }
+        return value;
+      }
+      function parseFactor() {
+        if (peek() === '−') { next(); return -parseFactor(); }
+        let value = parsePrimary();
+        while (peek() === '²') { next(); value = value * value; }
+        return value;
+      }
+      function parsePrimary() {
+        const tok = next();
+        if (tok === '(') {
+          const value = parseExpr();
+          if (next() !== ')') throw new Error('missing )');
+          return value;
+        }
+        if (tok !== undefined && /^[\d.]+$/.test(tok)) return parseFloat(tok);
+        throw new Error('unexpected token');
+      }
+
+      const result = parseExpr();
+      if (pos !== tokens.length || !isFinite(result)) throw new Error('invalid');
+      return parseFloat(result.toPrecision(12));
+    }
+
+    function renderCalculator(exprLine) {
+      document.getElementById('calc-display').innerText = calcExpr || '0';
+      document.getElementById('calc-expr').innerText = exprLine || '';
+    }
+
+    function calcPress(key) {
+      const isOperator = ['+', '−', '×', '÷', '²', ')'].includes(key);
+      if (calcJustEvaluated) {
+        // After "=", an operator continues from the result; anything else starts fresh
+        if (!isOperator && key !== '=' && key !== 'back') calcExpr = '';
+        calcJustEvaluated = false;
+      }
+
+      if (key === 'C') {
+        calcExpr = '';
+        renderCalculator('');
+      } else if (key === 'back') {
+        calcExpr = calcExpr.slice(0, -1);
+        renderCalculator('');
+      } else if (key === '=') {
+        if (!calcExpr) return;
+        const exprLine = calcExpr + ' =';
+        try {
+          calcExpr = String(evaluateCalcExpression(calcExpr)).replace('-', '−');
+          calcJustEvaluated = true;
+          renderCalculator(exprLine);
+        } catch (e) {
+          renderCalculator('식을 확인해 주세요');
+        }
+      } else {
+        calcExpr += key;
+        renderCalculator('');
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (document.getElementById('calc-modal').classList.contains('hidden')) return;
+      const keyMap = { '*': '×', '/': '÷', '-': '−', 'Enter': '=', 'Backspace': 'back', 'Escape': 'esc', 'Delete': 'C', '^': '²' };
+      const key = keyMap[e.key] || e.key;
+      if (key === 'esc') { closeCalculator(); return; }
+      if (/^[\d.+()]$/.test(key) || ['×', '÷', '−', '=', 'back', 'C', '²'].includes(key)) {
+        e.preventDefault();
+        calcPress(key);
+      }
+    });
 
     // REPORT EXPORTING FUNCTIONS (html2canvas Bridge)
     // Generate offscreen printable container and capture as PNG

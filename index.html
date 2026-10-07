@@ -74,7 +74,7 @@
         </div>
       </div>
       <div class="flex items-center gap-2">
-        <button onclick="openReportModal()" class="flex items-center gap-1.5 bg-yellow-400 hover:bg-yellow-500 text-slate-950 font-black text-xs px-3.5 py-1.5 rounded-xl shadow transition-all transform hover:scale-105">
+        <button onclick="generateReportAndDownload()" class="flex items-center gap-1.5 bg-yellow-400 hover:bg-yellow-500 text-slate-950 font-black text-xs px-3.5 py-1.5 rounded-xl shadow transition-all transform hover:scale-105">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
           </svg>
@@ -769,52 +769,6 @@
 
   </main>
 
-  <!-- Student Info Input & Generation Modal -->
-  <div id="report-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4 hidden">
-    <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl border border-slate-100 overflow-hidden transform scale-95 transition-transform duration-300">
-      <div class="bg-gradient-to-r from-indigo-700 to-blue-800 text-white p-4">
-        <h3 class="font-black text-sm flex items-center gap-1.5">
-          📄 탐구 보고서 자동 추출 및 저장
-        </h3>
-        <p class="text-[10px] text-indigo-100 mt-1">학생 개인 성적 제출 및 포트폴리오 저장을 위해 학생 정보와 실험 평가를 이미지(PNG)로 병합합니다.</p>
-      </div>
-      <div class="p-5 flex flex-col gap-4">
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-[10px] font-bold text-slate-500 mb-1">학년/반</label>
-            <input type="text" id="report-grade-class" placeholder="예: 3학년 2반" class="w-full text-xs p-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-          </div>
-          <div>
-            <label class="block text-[10px] font-bold text-slate-500 mb-1">번호</label>
-            <input type="text" id="report-num" placeholder="예: 15번" class="w-full text-xs p-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-          </div>
-        </div>
-        <div>
-          <label class="block text-[10px] font-bold text-slate-500 mb-1">학생 이름</label>
-          <input type="text" id="report-student-name" placeholder="예: 홍길동" class="w-full text-xs p-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-        </div>
-        <div>
-          <label class="block text-[10px] font-bold text-slate-500 mb-1">공동 실험자 / 모둠명</label>
-          <input type="text" id="report-group" placeholder="예:3모둠" class="w-full text-xs p-2 rounded-lg border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-        </div>
-
-        <div class="bg-slate-50 p-3 rounded-lg border border-slate-100 flex flex-col gap-1 text-[10px] text-slate-600">
-          <span class="font-bold text-slate-800">📌 포함될 데이터 리포트:</span>
-          <span class="flex justify-between">✓ 표준 높이별 속력 데이터 및 평균치 <span id="r-status-data" class="font-bold text-emerald-600">준비완료</span></span>
-          <span class="flex justify-between">✓ 물리 공식 수치 보존 일치 여부 판정 <span id="r-status-calc" class="font-bold text-rose-500">미완료</span></span>
-          <span class="flex justify-between">✓ 실전 실험 대비 사전 훈련 점검 <span id="r-status-check" class="font-bold text-rose-500">0/3 점검</span></span>
-        </div>
-
-        <div class="flex gap-2 justify-end pt-2">
-          <button onclick="closeReportModal()" class="py-2 px-4 rounded-xl text-xs font-bold text-slate-500 hover:bg-slate-100 transition-colors">취소</button>
-          <button onclick="generateReportAndDownload()" class="py-2 px-5 rounded-xl text-xs font-black bg-indigo-600 hover:bg-indigo-700 text-white shadow-md transition-all flex items-center gap-1.5">
-            💾 보고서 PNG 저장 시작
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- Loading Overlay for Image processing -->
   <div id="loading-overlay" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-[200] flex flex-col items-center justify-center hidden">
     <div class="animate-spin rounded-full h-10 w-10 border-4 border-yellow-400 border-t-transparent mb-4"></div>
@@ -832,12 +786,8 @@
       <p class="text-xs text-slate-600 mt-1">Ⅲ-2. 일과 에너지 | ❸ 중력이 일을 하면 에너지가 생겨</p>
     </div>
 
-    <!-- Student Metadata Section -->
-    <div class="grid grid-cols-3 gap-2 border border-slate-300 bg-slate-50/50 p-3 rounded text-xs">
-      <div><strong>소속 학년/반:</strong> <span id="p-grade-class">-</span></div>
-      <div><strong>학생 이름:</strong> <span id="p-student-name">-</span></div>
-      <div><strong>학번(번호):</strong> <span id="p-num">-</span></div>
-      <div class="col-span-2"><strong>공동 실험 조력자 / 모둠:</strong> <span id="p-group">-</span></div>
+    <!-- Report Metadata Section -->
+    <div class="border border-slate-300 bg-slate-50/50 p-3 rounded text-xs">
       <div><strong>보고서 저장일:</strong> <span id="p-date">-</span></div>
     </div>
 
@@ -1722,44 +1672,12 @@
     }
 
     // REPORT EXPORTING FUNCTIONS (html2canvas Bridge)
-    function openReportModal() {
-      // Check data completion status in modal display
-      const hasData = records[10].length > 0 || records[20].length > 0 || records[30].length > 0;
-      document.getElementById('r-status-data').innerText = hasData ? "기록 데이터 있음" : "데이터 없음";
-      document.getElementById('r-status-data').className = hasData ? "font-bold text-emerald-600" : "font-bold text-rose-500 animate-pulse";
-
-      document.getElementById('r-status-calc').innerText = (isWorkVerified && isKeVerified) ? "수식계산 정답 검증됨" : "계산 미검증";
-      document.getElementById('r-status-calc').className = (isWorkVerified && isKeVerified) ? "font-bold text-emerald-600" : "font-bold text-rose-500 animate-pulse";
-
-      const chkCount = (document.getElementById('chk-lab-1').checked ? 1 : 0) + 
-                         (document.getElementById('chk-lab-2').checked ? 1 : 0) + 
-                         (document.getElementById('chk-lab-3').checked ? 1 : 0);
-      document.getElementById('r-status-check').innerText = `${chkCount}/3개 완료`;
-      document.getElementById('r-status-check').className = chkCount === 3 ? "font-bold text-emerald-600" : "font-bold text-orange-500";
-
-      document.getElementById('report-modal').classList.remove('hidden');
-    }
-
-    function closeReportModal() {
-      document.getElementById('report-modal').classList.add('hidden');
-    }
-
     // Generate offscreen printable container and capture as PNG
     function generateReportAndDownload() {
-      const gradeClass = document.getElementById('report-grade-class').value.trim() || '과학실 3학년';
-      const studentNum = document.getElementById('report-num').value.trim() || '미기입 번호';
-      const studentName = document.getElementById('report-student-name').value.trim() || '무명 학생';
-      const groupName = document.getElementById('report-group').value.trim() || '개인 학습';
-
       // Show loader
-      document.getElementById('report-modal').classList.add('hidden');
       document.getElementById('loading-overlay').classList.remove('hidden');
 
-      // 1. Sync metadata to printed elements
-      document.getElementById('p-grade-class').innerText = gradeClass;
-      document.getElementById('p-num').innerText = studentNum;
-      document.getElementById('p-student-name').innerText = studentName;
-      document.getElementById('p-group').innerText = groupName;
+      // 1. Sync report date
       document.getElementById('p-date').innerText = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 
       // 2. Sync dynamic table values (Mirrors exactly the primary visual table structure for 5 sequential trials + averages)
@@ -1886,11 +1804,11 @@
 
       // Render capturing immediately without MathJax delay since report is purely formatted text now
       setTimeout(() => {
-        proceedToCanvasCapture(studentName);
+        proceedToCanvasCapture();
       }, 300);
     }
 
-    function proceedToCanvasCapture(studentName) {
+    function proceedToCanvasCapture() {
       const element = document.getElementById('printable-report');
       
       // Use html2canvas to render the invisible report div perfectly
@@ -1904,7 +1822,9 @@
         
         // Custom download link
         const link = document.createElement('a');
-        link.download = `중력과_운동에너지_실험보고서_${studentName}.png`;
+        const now = new Date();
+        const stamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}_${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}`;
+        link.download = `중력과_운동에너지_실험보고서_${stamp}.png`;
         link.href = image;
         link.click();
 

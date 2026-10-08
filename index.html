@@ -808,12 +808,12 @@
       <div class="grid grid-cols-2 gap-4 text-xs">
         <div class="border border-slate-200 p-3 rounded bg-slate-50/40">
           <strong class="text-indigo-900 block mb-1">① 중력이 추에 한 일 (이론치)</strong>
-          <span class="text-[11px] block text-slate-600">공식: W = 9.8 × m(kg) × h(m)</span>
+          <span class="text-[11px] block text-slate-600">공식: 중력이 추에 한 일의 양 = 9.8 × 질량(kg) × 높이(m)</span>
           <p id="p-calc-work" class="mt-2 font-black text-indigo-700 bg-indigo-50 p-1.5 rounded text-center border border-indigo-100"></p>
         </div>
         <div class="border border-slate-200 p-3 rounded bg-slate-50/40">
           <strong class="text-amber-900 block mb-1">② 낙하 후 획득한 운동 에너지 (실측치)</strong>
-          <span class="text-[11px] block text-slate-600">공식: Ek = 0.5 × m(kg) × v²(m/s)²</span>
+          <span class="text-[11px] block text-slate-600">공식: 운동 에너지 = ½ × 질량(kg) × 속력(m/s)²</span>
           <p id="p-calc-ke" class="mt-2 font-black text-amber-700 bg-amber-50 p-1.5 rounded text-center border border-amber-100"></p>
         </div>
       </div>
@@ -848,7 +848,7 @@
             <strong>질문:</strong> 다음 보기 중 운동 에너지와 속력 및 질량의 올바른 그래프적 관계를 나타낸 것만을 있는 대로 고른 것은?
           </p>
           <div class="bg-white/80 p-1.5 rounded border border-slate-100 text-slate-500 text-[10px] mb-1.5 leading-snug">
-            <strong>* 문항 해설:</strong> 운동에너지($E_k$) 공식은 $E_k = \frac{1}{2}mv^2$ 입니다. 따라서 속력($v$)이 일정할 때 운동에너지는 질량($m$)에 정비례하여 직선 형태를 보이며(ㄱ), 질량이 일정할 때 운동에너지는 속력의 제곱($v^2$)에 정비례하므로 가로축이 $v^2$일 때도 직선 형태를 보입니다(ㄹ).
+            <strong>* 문항 해설:</strong> 운동 에너지 공식은 운동 에너지 = ½ × 질량 × 속력² 입니다. 따라서 속력이 일정할 때 운동 에너지는 질량에 정비례하여 직선 형태를 보이며(ㄱ), 질량이 일정할 때 운동 에너지는 속력의 제곱에 정비례하므로 가로축이 (속력)²일 때도 직선 형태를 보입니다(ㄹ).
           </div>
           <p class="text-[11px]">
             <strong>내가 선택한 첫 답안:</strong> <span id="p-quiz1-choice" class="font-extrabold text-indigo-700">-</span>
@@ -865,7 +865,7 @@
             <strong>질문:</strong> 그림과 같이 추가 매달린 A 지점으로부터 20 cm 간격으로 속력 측정기를 설치한 후, 실을 잘라 추를 낙하시켰다. 속력 측정기에 나타난 값이 가장 큰 지점은?
           </p>
           <div class="bg-white/80 p-1.5 rounded border border-slate-100 text-slate-500 text-[10px] mb-1.5 leading-snug">
-            <strong>* 문항 해설:</strong> 지구가 물체에 해준 중력의 일($W = mgh$)은 물체의 운동 에너지($E_k = \frac{1}{2}mv^2$)로 고스란히 전환됩니다. 추가 아래로 많이 낙하할수록(낙하한 거리 $h$가 증가할수록) 중력이 추에 해준 누적 일의 양이 더 많아져 최종 속력과 운동 에너지가 가장 커집니다.
+            <strong>* 문항 해설:</strong> 지구가 물체에 해준 중력의 일(9.8 × 질량 × 높이)은 물체의 운동 에너지(½ × 질량 × 속력²)로 고스란히 전환됩니다. 추가 아래로 많이 낙하할수록(낙하한 높이가 증가할수록) 중력이 추에 해준 누적 일의 양이 더 많아져 최종 속력과 운동 에너지가 가장 커집니다.
           </div>
           <p class="text-[11px]">
             <strong>내가 선택한 첫 답안:</strong> <span id="p-quiz2-choice" class="font-extrabold text-indigo-700">-</span>
@@ -1222,7 +1222,7 @@
       const formulaWorkRes = document.getElementById('formula-work-res');
       const exactWork = g * m_kg * h_meter;
       if (formulaWorkRes) {
-        formulaWorkRes.innerHTML = `$W = 9.8 \\times ${m_kg.toFixed(1)}\\text{kg} \\times ${h_meter.toFixed(2)}\\text{m} = ${exactWork.toFixed(3)}\\text{ J}$`;
+        formulaWorkRes.innerText = `중력이 추에 한 일의 양 = 9.8 × ${m_kg.toFixed(1)} kg × ${h_meter.toFixed(2)} m = ${exactWork.toFixed(3)} J`;
       }
 
       // Get current height's average speed from data records
@@ -1252,9 +1252,9 @@
       if (formulaKineticRes) {
         if (avgSpeed > 0) {
           const exactKe = 0.5 * m_kg * avgSpeed * avgSpeed;
-          formulaKineticRes.innerHTML = `$E_k = \\frac{1}{2} \\times ${m_kg.toFixed(1)}\\text{kg} \\times (${avgSpeed.toFixed(2)}\\text{m/s})^2 = ${exactKe.toFixed(3)}\\text{ J}$`;
+          formulaKineticRes.innerText = `운동 에너지 = ½ × ${m_kg.toFixed(1)} kg × (${avgSpeed.toFixed(2)} m/s)² = ${exactKe.toFixed(3)} J`;
         } else {
-          formulaKineticRes.innerHTML = `$\\text{낙하 속력 미계측}$`;
+          formulaKineticRes.innerText = '낙하 속력 미계측';
         }
       }
 
@@ -1422,7 +1422,7 @@
 
         if (b1 === "일" && b2 === "운동" && b3 === "중력" && b4 === "운동") {
           feedback.className = "mt-2 p-2.5 rounded-lg text-[10px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-100";
-          feedback.innerHTML = "🎉 <strong>참 잘했습니다! 모두 정답입니다.</strong><br>중력이 한 일($W$)이 모두 추의 운동 에너지($E_k$)로 전환되는 물리 법칙을 완벽히 파악했습니다.";
+          feedback.innerHTML = "🎉 <strong>참 잘했습니다! 모두 정답입니다.</strong><br>중력이 한 일이 모두 추의 운동 에너지로 전환되는 물리 법칙을 완벽히 파악했습니다.";
         } else {
           feedback.className = "mt-2 p-2.5 rounded-lg text-[10px] font-semibold bg-rose-50 text-rose-800 border border-rose-100";
           feedback.innerHTML = "❌ <strong>일치하지 않는 빈칸이 있습니다. 다시 검토해 볼까요?</strong><br>힌트: 중력이 추에 한 [일]의 양... [운동] 에너지... [중력]이 물체에 한 일... 순서로 들어갑니다.";
@@ -1440,7 +1440,7 @@
 
         if (isCorrect1 && isCorrect2 && isCorrect3) {
           feedback.className = "mt-2 p-2.5 rounded-lg text-[10px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-100";
-          feedback.innerHTML = "🎉 <strong>참 잘했습니다! 모두 정답입니다.</strong><br>질량이 $2$배 증가하면 중력($mgh$)도 $2$배가 되므로 중력이 한 일도 $2$배, 추가 획득하는 운동 에너지($\\frac{1}{2}mv^2$)도 정확히 $2$배 증가하게 됩니다.";
+          feedback.innerHTML = "🎉 <strong>참 잘했습니다! 모두 정답입니다.</strong><br>질량이 2배 증가하면 추에 작용하는 중력도 2배가 되므로 중력이 한 일(9.8 × 질량 × 높이)도 2배, 추가 획득하는 운동 에너지(½ × 질량 × 속력²)도 정확히 2배 증가하게 됩니다.";
         } else {
           feedback.className = "mt-2 p-2.5 rounded-lg text-[10px] font-semibold bg-rose-50 text-rose-800 border border-rose-100";
           feedback.innerHTML = "❌ <strong>틀린 빈칸이 있습니다. 다시 한 번 연산해 보세요!</strong><br>힌트: 질량이 100g에서 200g으로 늘어났으니 모든 물리량은 [몇] 배로 비례해서 증가할지 생각해보세요.";
@@ -1564,12 +1564,12 @@
           const correctOpt = document.getElementById('q1-opt3');
           if (correctOpt) correctOpt.className = "py-1 px-1.5 rounded border-2 border-emerald-500 bg-emerald-50 text-emerald-800 text-left text-[10px] font-bold shadow-sm";
           feedback.className = "text-[10px] mt-1.5 p-2.5 rounded-lg font-medium bg-emerald-50 text-emerald-800 border border-emerald-100";
-          feedback.innerHTML = "🎉 <strong>정답입니다!</strong><br>식($E_k = \\frac{1}{2}mv^2$)에 따라, 질량에 정비례(ㄱ)하고 속력의 <strong>제곱에 비례(ㄹ)</strong>하는 관계입니다. 가로축이 속력의 제곱($v^2$)이므로, 가로축과의 관계 그래프는 곡선이 아니라 <strong>직선(ㄹ)</strong> 형태로 곧게 뻗어 나가야 옳습니다.";
+          feedback.innerHTML = "🎉 <strong>정답입니다!</strong><br>식(운동 에너지 = ½ × 질량 × 속력²)에 따라, 질량에 정비례(ㄱ)하고 속력의 <strong>제곱에 비례(ㄹ)</strong>하는 관계입니다. 가로축이 속력의 제곱((속력)²)이므로, 가로축과의 관계 그래프는 곡선이 아니라 <strong>직선(ㄹ)</strong> 형태로 곧게 뻗어 나가야 옳습니다.";
         } else {
           const wrongOpt = document.getElementById(`q1-opt${choiceSelected}`);
           if (wrongOpt) wrongOpt.className = "py-1 px-1.5 rounded border-2 border-rose-500 bg-rose-50 text-rose-800 text-left text-[10px] font-bold";
           feedback.className = "text-[10px] mt-1.5 p-2.5 rounded-lg font-medium bg-rose-50 text-rose-800 border border-rose-100";
-          feedback.innerHTML = "❌ <strong>틀렸습니다! 다시 검토해 보세요.</strong><br>가로축이 단순 속력($v$)일 때는 아래로 볼록한 2차 곡선(ㄷ 모양)이 맞지만, 가로축이 속력의 제곱인 <strong>(속력)²</strong>으로 표기되어 있으므로 <strong>비례 관계인 직선(ㄹ)</strong> 그래프가 정답입니다.";
+          feedback.innerHTML = "❌ <strong>틀렸습니다! 다시 검토해 보세요.</strong><br>가로축이 단순 속력일 때는 아래로 볼록한 2차 곡선(ㄷ 모양)이 맞지만, 가로축이 속력의 제곱인 <strong>(속력)²</strong>으로 표기되어 있으므로 <strong>비례 관계인 직선(ㄹ)</strong> 그래프가 정답입니다.";
         }
       } else if (quizNum === 2) {
         // Track first attempt choice

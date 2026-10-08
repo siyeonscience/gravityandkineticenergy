@@ -360,15 +360,15 @@
             <span class="text-[9px] font-bold text-indigo-300 block mb-1">현재 계산용 물리 데이터 리드아웃</span>
             <div class="grid grid-cols-3 gap-2 text-center text-xs mt-1">
               <div class="bg-white/10 p-1.5 rounded">
-                <span class="block text-[8px] text-indigo-200">질량 ($m$)</span>
+                <span class="block text-[8px] text-indigo-200">질량</span>
                 <span id="calc-state-mass" class="font-extrabold text-yellow-300">0.1 kg</span>
               </div>
               <div class="bg-white/10 p-1.5 rounded">
-                <span class="block text-[8px] text-indigo-200">낙하 높이 ($h$)</span>
+                <span class="block text-[8px] text-indigo-200">낙하 높이</span>
                 <span id="calc-state-height" class="font-extrabold text-yellow-300">0.3 m</span>
               </div>
               <div class="bg-white/10 p-1.5 rounded">
-                <span class="block text-[8px] text-indigo-200">현재 높이 평균속력 ($v$)</span>
+                <span class="block text-[8px] text-indigo-200">현재 높이 평균속력</span>
                 <span id="calc-state-v" class="font-extrabold text-emerald-300">0.00 m/s</span>
               </div>
             </div>
@@ -384,8 +384,8 @@
             <!-- Work Calculation Field -->
             <div id="calc-anchor-work" class="relative p-3 bg-slate-50 border border-slate-200 rounded-xl flex flex-col gap-2">
               <div>
-                <span class="text-[10px] font-black text-indigo-700 block">① 중력이 추에 한 일의 양 ($W$)</span>
-                <span class="text-[9px] text-slate-500">$W = 9.8 \times m(\text{kg} ) \times h(\text{m} )$</span>
+                <span class="text-[10px] font-black text-indigo-700 block">① 중력이 추에 한 일의 양</span>
+                <span class="text-[10px] text-slate-500">중력이 추에 한 일의 양 = 9.8 × 질량(kg) × 높이(m)</span>
               </div>
               <div class="flex gap-1.5 items-center mt-1">
                 <div class="relative flex-grow">
@@ -402,8 +402,8 @@
             <!-- Kinetic Energy Calculation Field -->
             <div id="calc-anchor-ke" class="relative p-3 bg-slate-50 border border-slate-200 rounded-xl flex flex-col gap-2">
               <div>
-                <span class="text-[10px] font-black text-amber-700 block">② 낙하 직후 추의 운동 에너지 ($E_k$)</span>
-                <span class="text-[9px] text-slate-500">$E_k = \frac{1}{2} \times m(\text{kg} ) \times v(\text{m/s} )^2$</span>
+                <span class="text-[10px] font-black text-amber-700 block">② 낙하 직후 추의 운동 에너지</span>
+                <span class="text-[10px] text-slate-500">운동 에너지 = ½ × 질량(kg) × 속력(m/s)<sup>2</sup></span>
               </div>
               <div class="flex gap-1.5 items-center mt-1">
                 <div class="relative flex-grow">
@@ -427,14 +427,14 @@
             
             <!-- Graph state message -->
             <div id="graph-lock-msg" class="text-center py-4 text-xs text-slate-500 font-semibold border-2 border-dashed border-slate-300 rounded-lg bg-white/50">
-              🔒 위의 일($W$)과 운동 에너지($E_k$) 값을 직접 올바르게 구하여 [확인] 버튼을 통과하면 그래프가 활성화됩니다!
+              🔒 위의 중력이 한 일과 운동 에너지 값을 직접 올바르게 구하여 [확인] 버튼을 통과하면 그래프가 활성화됩니다!
             </div>
 
             <div id="graph-active-container" class="space-y-3 hidden">
               <!-- Gravity's Work Bar -->
               <div>
                 <div class="flex justify-between text-[10px] font-bold mb-0.5">
-                  <span class="text-indigo-700">중력이 추에 한 일 (이론치 $W$)</span>
+                  <span class="text-indigo-700">중력이 추에 한 일 (이론치)</span>
                   <span id="chart-work-val" class="text-slate-800 font-black">0.000 J</span>
                 </div>
                 <div class="w-full bg-slate-200 h-4 rounded-md overflow-hidden flex">
@@ -445,7 +445,7 @@
               <!-- Kinetic Energy Bar -->
               <div>
                 <div class="flex justify-between text-[10px] font-bold mb-0.5">
-                  <span class="text-amber-700">추가 얻은 운동 에너지 (실험치 $E_k$)</span>
+                  <span class="text-amber-700">추가 얻은 운동 에너지 (실험치)</span>
                   <span id="chart-ke-val" class="text-slate-800 font-black">0.000 J</span>
                 </div>
                 <div class="w-full bg-slate-200 h-4 rounded-md overflow-hidden flex">
@@ -464,7 +464,7 @@
                   🔍 [참고] 탐구활동 오차 원인 분석 가이드
                 </span>
                 <p>
-                  이론치인 중력이 한 일($W$)에 비해 실제 측정된 운동 에너지($E_k$)가 약간 적게 나타나는 경향이 있습니다. 실제 실험 및 이 시뮬레이션에서 발생하는 오차의 핵심 원인은 다음과 같습니다.
+                  이론치인 중력이 한 일에 비해 실제 측정된 운동 에너지가 약간 적게 나타나는 경향이 있습니다. 실제 실험 및 이 시뮬레이션에서 발생하는 오차의 핵심 원인은 다음과 같습니다.
                 </p>
                 <ul class="list-disc pl-4 space-y-0.5 font-medium text-slate-700">
                   <li><strong class="text-indigo-900">공기 저항:</strong> 추가 낙하하면서 공기 분자와 지속해서 부딪쳐 에너지가 미세하게 열에너지로 소실됩니다.</li>
